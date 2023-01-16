@@ -37,10 +37,11 @@ namespace ProjektAnjaParson_Backend.Controllers
         [HttpPost]
         public void Post([FromBody] string value)
         {
-
             using (var db = new ApdatabaseContext())
             {
                 var data = db.Categories;
+                data.Add(new Category() { Name = value });
+                db.SaveChanges();
             }
 
         }
@@ -49,12 +50,22 @@ namespace ProjektAnjaParson_Backend.Controllers
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
+            using (var db = new ApdatabaseContext())
+            {
+                var data = db.Categories;
+
+                var selected = data.SingleOrDefault(c => c.Id == id);
+                if (selected != null) { 
+                    db.SaveChanges();
+                }
+            }
         }
 
         // DELETE api/<CategoryController>/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+           
         }
     }
 }
