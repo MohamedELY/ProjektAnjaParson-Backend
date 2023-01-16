@@ -7,9 +7,9 @@ public partial class Place
 {
     public int Id { get; set; }
 
-    public int? LocationId { get; set; }
+    public string? Name { get; set; }
 
-    public string? PostId { get; set; }
+    public int? LocationId { get; set; }
 
     public string? Address { get; set; }
 

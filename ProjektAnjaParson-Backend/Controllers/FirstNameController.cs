@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+//using ProjektAnjaParson_Backend.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -26,6 +27,12 @@ namespace ProjektAnjaParson_Backend.Controllers
         [HttpPost]
         public void Post([FromBody] string value)
         {
+            //using (var db = new ApdatabaseContext())
+            //{
+            //    var data = db.FirstNames;
+            //    data.Add(new FirstName() { Id = data.LastOrDefault().Id + 1, FirstName1 = value });
+            //    db.SaveChanges();
+            //}
         }
 
         // PUT api/<FirstNameController>/5
