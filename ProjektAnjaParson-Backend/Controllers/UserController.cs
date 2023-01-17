@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProjektAnjaParson_Backend.Models;
 
+
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace ProjektAnjaParson_Backend.Controllers
@@ -14,7 +15,7 @@ namespace ProjektAnjaParson_Backend.Controllers
         public IEnumerable<User> Get()
         {
             var data = new List<User>();
-            using (var db = new ApdatabaseContext())
+            using (var db = new ApplicationDbContext.ApplicationDbContext())
             {
                 data = db.Users.ToList();
             }
@@ -26,7 +27,7 @@ namespace ProjektAnjaParson_Backend.Controllers
         public User Get(int id)
         {
             var data = new User();
-            using (var db = new ApdatabaseContext())
+            using (var db = new ApplicationDbContext.ApplicationDbContext())
             {
                 data = db.Users.SingleOrDefault(c => c.Id == id);
             }
@@ -37,7 +38,7 @@ namespace ProjektAnjaParson_Backend.Controllers
         [HttpPost]
         public void Post(int fullNameId, string username, string password)
         {
-            using (var db = new ApdatabaseContext())
+            using (var db = new ApplicationDbContext.ApplicationDbContext())
             {
                 var data = db.Users;
                     
@@ -55,7 +56,7 @@ namespace ProjektAnjaParson_Backend.Controllers
         [HttpPut("{id}")]
         public void Put(int id, int fullNameId, string password)
         {
-            using (var db = new ApdatabaseContext())
+            using (var db = new ApplicationDbContext.ApplicationDbContext())
             {
                 var data = db.Users;
 
@@ -73,14 +74,14 @@ namespace ProjektAnjaParson_Backend.Controllers
         [HttpDelete("{id}")]
         public void Put(int id)
         {
-            using (var db = new ApdatabaseContext())
+            using (var db = new ApplicationDbContext.ApplicationDbContext())
             {
                 var data = db.Users;
                 var selected = data.SingleOrDefault(c => c.Id == id);
                 
                 if (selected != null)
                 {
-                    db.Remove(selected.Posts);
+                    //db.Remove(selected.Posts);
                     db.Remove(selected);
 
                 }
