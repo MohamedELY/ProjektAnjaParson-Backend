@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProjektAnjaParson_Backend.Models;
-using System.Diagnostics.Eventing.Reader;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -15,7 +14,7 @@ namespace ProjektAnjaParson_Backend.Controllers
         public IEnumerable<FirstName> Get()
         {
             var data = new List<FirstName>();
-            using (var db = new ApdatabaseContext())
+            using (var db = new AppDbContext.ApdatabaseContext())
             {
                 data = db.FirstNames.ToList();
             }
@@ -28,7 +27,7 @@ namespace ProjektAnjaParson_Backend.Controllers
         public FirstName Get(int id)
         {
             var data = new FirstName();
-            using (var db = new ApdatabaseContext())
+            using (var db = new AppDbContext.ApdatabaseContext())
             {
                 data = db.FirstNames.SingleOrDefault(c => c.Id == id); ;
             }
@@ -40,7 +39,7 @@ namespace ProjektAnjaParson_Backend.Controllers
         [HttpPost]
         public void Post(string firstName)
         {
-            using (var db = new ApdatabaseContext())
+            using (var db = new AppDbContext.ApdatabaseContext())
             {
                 var exist = db.FirstNames.SingleOrDefault(c => c.FirstName1.ToLower() == firstName.ToLower());
                 if (exist == null)
@@ -58,7 +57,7 @@ namespace ProjektAnjaParson_Backend.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-            using (var db = new ApdatabaseContext())
+            using (var db = new AppDbContext.ApdatabaseContext())
             {
                 var data = db.FirstNames.SingleOrDefault(c => c.Id == c.Id);
                 if (data != null)

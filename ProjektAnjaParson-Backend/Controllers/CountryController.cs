@@ -15,7 +15,7 @@ namespace ProjektAnjaParson_Backend.Controllers
         public IEnumerable<Country> Get()
         {
             var data = new List<Country>();
-            using (var db = new ApplicationDbContext.ApplicationDbContext())
+            using (var db = new AppDbContext.ApdatabaseContext())
             {
                 data = db.Countries.ToList();
             }
@@ -28,7 +28,7 @@ namespace ProjektAnjaParson_Backend.Controllers
         public Country Get(int id)
         {
             var data = new Country();
-            using (var db = new ApplicationDbContext.ApplicationDbContext())
+            using (var db = new AppDbContext.ApdatabaseContext())
             {
                 data = db.Countries.SingleOrDefault(c => c.Id == id);
             }
@@ -39,7 +39,7 @@ namespace ProjektAnjaParson_Backend.Controllers
         [HttpPost]
         public void Post([FromBody] string name)
         {
-            using (var db = new ApplicationDbContext.ApplicationDbContext())
+            using (var db = new AppDbContext.ApdatabaseContext())
             {
                 var data = db.Countries;
                 data.Add(new Country() { Name = name });
@@ -51,7 +51,7 @@ namespace ProjektAnjaParson_Backend.Controllers
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string name)
         {
-            using (var db = new ApplicationDbContext.ApplicationDbContext())
+            using (var db = new AppDbContext.ApdatabaseContext())
             {
                 var data = db.Countries;
 
