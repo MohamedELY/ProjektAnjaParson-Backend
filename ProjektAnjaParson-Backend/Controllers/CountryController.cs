@@ -36,19 +36,19 @@ namespace ProjektAnjaParson_Backend.Controllers
 
         // POST api/<CountryController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post([FromBody] string name)
         {
             using (var db = new ApdatabaseContext())
             {
                 var data = db.Countries;
-                data.Add(new Country() { Name = value });
+                data.Add(new Country() { Name = name });
                 db.SaveChanges();
             }
         }
 
         // PUT api/<CountryController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public void Put(int id, [FromBody] string name)
         {
             using (var db = new ApdatabaseContext())
             {
@@ -57,7 +57,7 @@ namespace ProjektAnjaParson_Backend.Controllers
                 var selected = data.SingleOrDefault(c => c.Id == id);
                 if (selected != null)
                 {
-                    selected.Name = value;
+                    selected.Name = name;
                     db.SaveChanges();
                 }
             }
