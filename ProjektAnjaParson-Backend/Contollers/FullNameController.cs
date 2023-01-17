@@ -12,29 +12,52 @@ namespace ProjektAnjaParson_Backend.Contollers
     public class FullNameController : ControllerBase
     {
         //GET: api/<FullNameController>
-        //[HttpGet]
-        //public IQueryable<DFullName> Get()
-        //{
-        //    using (var db = new AppDbContext.ApdatabaseContext())
-        //    {
+        [HttpGet]
+        public List<CFullName> Get()
+        {
 
-        //    }
-
-        //    Console.WriteLine("Retriving Full Name's From DB");
-        //    return data;
-        //}
+            using (var db = new AppDbContext.ApdatabaseContext())
+            {
+                var query = (from flname in db.FullNames
+                             join fname in db.FirstNames on flname.FirstNameId equals fname.Id
+                             join lname in db.LastNames on flname.LastNameId equals lname.Id
+                             select new CFullName
+                             {
+                                 Id = flname.Id,
+                                 FirstName = fname.FirstName1,
+                                 LastName = lname.LastName1
+                             }).ToList();
+                Console.WriteLine("Retriving Full Name's From DB");
+                return query;
+            }
+        }
 
         // GET api/<FullNameController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public CFullName Get(int id)
         {
-            return "value";
+            using (var db = new AppDbContext.ApdatabaseContext())
+            {
+                var query = (from flname in db.FullNames
+                             join fname in db.FirstNames on flname.FirstNameId equals fname.Id
+                             join lname in db.LastNames on flname.LastNameId equals lname.Id
+                             where flname.Id == id
+                             select new CFullName
+                             {
+                                 Id = flname.Id,
+                                 FirstName = fname.FirstName1,
+                                 LastName = lname.LastName1
+                             }).First();
+                Console.WriteLine("Retriving Full Name From DB");
+                return query;
+            }
         }
 
         // POST api/<FullNameController>
         [HttpPost]
         public void Post([FromBody] string value)
         {
+            
         }
 
         // PUT api/<FullNameController>/5

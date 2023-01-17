@@ -1,6 +1,6 @@
 ﻿namespace ProjektAnjaParson_Backend.DataModels
 {
-    public class DFullName
+    public class CFullName
     {
         public int Id { get; set; }
 
