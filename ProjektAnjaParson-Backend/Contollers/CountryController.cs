@@ -4,7 +4,7 @@ using ProjektAnjaParson_Backend.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace ProjektAnjaParson_Backend.Controllers
+namespace ProjektAnjaParson_Backend.Contollers
 {
     [Route("api/[controller]")]
     [ApiController]

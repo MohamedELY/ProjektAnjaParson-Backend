@@ -1,80 +1,71 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProjektAnjaParson_Backend.ApplicationDbContext;
 using ProjektAnjaParson_Backend.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace ProjektAnjaParson_Backend.Controllers
+namespace ProjektAnjaParson_Backend.Contollers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PlaceController : ControllerBase
+    public class LocationController : ControllerBase
     {
-        // GET: api/<PlaceController>
+        // GET: api/<LocationController>
         [HttpGet]
-        public IEnumerable<Place> Get()
+        public IEnumerable<Location> Get()
         {
-            var data = new List<Place>();
+            var data = new List<Location>();
             using (var db = new AppDbContext.ApdatabaseContext())
             {
-                data = db.Places.ToList();
+                data = db.Locations.ToList();
             }
             return data;
         }
 
-        // GET api/<PlaceController>/5
+        // GET api/<LocationController>/5
         [HttpGet("{id}")]
-        public Place Get(int id)
+        public Location Get(int id)
         {
-            var data = new Place();
+            var data = new Location();
             using (var db = new AppDbContext.ApdatabaseContext())
             {
-                data = db.Places.SingleOrDefault(c => c.Id == id);
+                data = db.Locations.SingleOrDefault(c => c.Id == id);
             }
             return data;
         }
 
-        // POST api/<PlaceController>
+        // POST api/<LocationController>
         [HttpPost]
-        public void Post([FromBody] string name, int locationId, string adress, int categoryId)
+        public void Post([FromBody] string value)
         {
             using (var db = new AppDbContext.ApdatabaseContext())
             {
-                var data = db.Places;
-                data.Add(new Place() { Name = name, LocationId = locationId, Address = adress, CategoryId = categoryId});
+                var data = db.Locations;
+                data.Add(new Location() { Name = value });
                 db.SaveChanges();
             }
         }
 
-        // PUT api/<PlaceController>/5
+        // PUT api/<LocationController>/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
             using (var db = new AppDbContext.ApdatabaseContext())
             {
-                var data = db.Places;
+                var data = db.Locations;
 
                 var selected = data.SingleOrDefault(c => c.Id == id);
                 if (selected != null)
                 {
-                    selected.Name = value;
                     db.SaveChanges();
                 }
             }
         }
 
-        // DELETE api/<PlaceController>/5
+        // DELETE api/<LocationController>/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-            using (var db = new AppDbContext.ApdatabaseContext())
-            {
-                var data = db.Places;
-                
-                var selected = data.Single(c => c.Id == id);
-                
-                data.Remove(selected);
-                db.SaveChanges();
-            }
         }
     }
 }

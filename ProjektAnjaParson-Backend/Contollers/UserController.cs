@@ -4,7 +4,7 @@ using ProjektAnjaParson_Backend.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace ProjektAnjaParson_Backend.Controllers
+namespace ProjektAnjaParson_Backend.Contollers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -41,7 +41,7 @@ namespace ProjektAnjaParson_Backend.Controllers
             using (var db = new AppDbContext.ApdatabaseContext())
             {
                 var data = db.Users;
-                    
+
                 data.Add(new User()
                 {
                     FullNameId = fullNameId,
@@ -78,7 +78,7 @@ namespace ProjektAnjaParson_Backend.Controllers
             {
                 var data = db.Users;
                 var selected = data.SingleOrDefault(c => c.Id == id);
-                
+
                 if (selected != null)
                 {
                     //db.Remove(selected.Posts);
