@@ -11,13 +11,13 @@ namespace ProjektAnjaParson_Backend.Contollers
     [ApiController]
     public class FullNameController : ControllerBase
     {
-        // GET: api/<FullNameController>
+        //GET: api/<FullNameController>
         //[HttpGet]
         //public IQueryable<DFullName> Get()
         //{
         //    using (var db = new AppDbContext.ApdatabaseContext())
         //    {
-                
+
         //    }
 
         //    Console.WriteLine("Retriving Full Name's From DB");

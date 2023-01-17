@@ -35,8 +35,8 @@ namespace ProjektAnjaParson_Backend.Contollers
             return data;
         }
 
-        // GET api/<FirstNameController>/5
-        [HttpGet("{id}")]
+        //GET api/<FirstNameController>/5
+        [HttpGet("{fname}")]
         public FirstName Get(string fname)
         {
             var data = new FirstName();
