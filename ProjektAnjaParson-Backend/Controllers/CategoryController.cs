@@ -18,6 +18,7 @@ namespace ProjektAnjaParson_Backend.Controllers
             {
                 data = db.Categories.ToList();
             }
+            Console.WriteLine("Retriving Category's From DB");
             return data;
         }
 
@@ -30,32 +31,37 @@ namespace ProjektAnjaParson_Backend.Controllers
             {
                 data = db.Categories.SingleOrDefault(c => c.Id == id);
             }
+            Console.WriteLine("Retriving Category From DB");
             return data;
         }
 
         // POST api/<CategoryController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post( string name, string icon)
         {
             using (var db = new ApdatabaseContext())
             {
                 var data = db.Categories;
-                data.Add(new Category() { Name = value });
+                data.Add(new Category() { Name = name, Icon = icon});
                 db.SaveChanges();
             }
-
+            Console.WriteLine("Category Has been Saved to DB");
         }
 
         // PUT api/<CategoryController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public void Put(int id, string name, string icon)
         {
             using (var db = new ApdatabaseContext())
             {
                 var data = db.Categories;
 
                 var selected = data.SingleOrDefault(c => c.Id == id);
-                if (selected != null) { 
+                if (selected != null) {
+                    
+                    selected.Name = name;
+                    selected.Icon = icon;
+                         
                     db.SaveChanges();
                 }
             }
@@ -65,7 +71,17 @@ namespace ProjektAnjaParson_Backend.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-           
+            using (var db = new ApdatabaseContext())
+            {
+                var data = db.Categories.SingleOrDefault(c => c.Id == c.Id);
+                if (data != null)
+                {
+                    db.Categories.Remove(data);
+
+                    db.SaveChanges();
+                }
+            }
+            Console.WriteLine("Category Has been Deleted from DB");
         }
     }
 }

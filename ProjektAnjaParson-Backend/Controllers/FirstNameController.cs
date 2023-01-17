@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProjektAnjaParson_Backend.Models;
+using System.Diagnostics.Eventing.Reader;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -11,40 +12,63 @@ namespace ProjektAnjaParson_Backend.Controllers
     {
         //GET: api/<FirstNameController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<FirstName> Get()
         {
-            return new string[] { "value1", "value2" };
+            var data = new List<FirstName>();
+            using (var db = new ApdatabaseContext())
+            {
+                data = db.FirstNames.ToList();
+            }
+            Console.WriteLine("Retriving First Name's From DB");
+            return data;
         }
 
         // GET api/<FirstNameController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public FirstName Get(int id)
         {
-            return "value";
+            var data = new FirstName();
+            using (var db = new ApdatabaseContext())
+            {
+                data = db.FirstNames.SingleOrDefault(c => c.Id == id); ;
+            }
+            Console.WriteLine("Retriving First Name From DB");
+            return data;
         }
 
         // POST api/<FirstNameController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post(string firstName)
         {
             using (var db = new ApdatabaseContext())
             {
-                var data = db.FirstNames;
-                data.Add(new FirstName() { FirstName1 = value });
-                db.SaveChanges();
+                var exist = db.FirstNames.SingleOrDefault(c => c.FirstName1.ToLower() == firstName.ToLower());
+                if (exist == null)
+                {
+                    var data = db.FirstNames;
+                    data.Add(new FirstName() { FirstName1 = firstName });
+                    
+                    db.SaveChanges();
+                }
             }
-        }
-
-        // PUT api/<FirstNameController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
+            Console.WriteLine("First Name Has been Saved to DB");
         }
 
         // DELETE api/<FirstNameController>/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+            using (var db = new ApdatabaseContext())
+            {
+                var data = db.FirstNames.SingleOrDefault(c => c.Id == c.Id);
+                if (data != null)
+                {
+                    db.FirstNames.Remove(data);
+
+                    db.SaveChanges();
+                }
+            }
+            Console.WriteLine("First Name Has been Deleted from DB");
         }
     }
 }
