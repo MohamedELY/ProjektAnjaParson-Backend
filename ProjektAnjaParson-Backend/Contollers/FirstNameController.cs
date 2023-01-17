@@ -35,6 +35,19 @@ namespace ProjektAnjaParson_Backend.Contollers
             return data;
         }
 
+        //GET api/<FirstNameController>/5
+        [HttpGet("{fname}")]
+        public FirstName Get(string fname)
+        {
+            var data = new FirstName();
+            using (var db = new AppDbContext.ApdatabaseContext())
+            {
+                data = db.FirstNames.SingleOrDefault(c => c.FirstName1 == fname); ;
+            }
+            Console.WriteLine("Retriving First Name From DB");
+            return data;
+        }
+
         // POST api/<FirstNameController>
         [HttpPost]
         public void Post(string firstName)

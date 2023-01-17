@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProjektAnjaParson_Backend.Models;
+using ProjektAnjaParson_Backend.DataModels;
+using System.Linq;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,12 +11,18 @@ namespace ProjektAnjaParson_Backend.Contollers
     [ApiController]
     public class FullNameController : ControllerBase
     {
-        // GET: api/<FullNameController>
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
+        //GET: api/<FullNameController>
+        //[HttpGet]
+        //public IQueryable<DFullName> Get()
+        //{
+        //    using (var db = new AppDbContext.ApdatabaseContext())
+        //    {
+
+        //    }
+
+        //    Console.WriteLine("Retriving Full Name's From DB");
+        //    return data;
+        //}
 
         // GET api/<FullNameController>/5
         [HttpGet("{id}")]
