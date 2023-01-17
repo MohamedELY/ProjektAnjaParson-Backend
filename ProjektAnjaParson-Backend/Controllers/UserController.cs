@@ -14,7 +14,7 @@ namespace ProjektAnjaParson_Backend.Controllers
         public IEnumerable<User> Get()
         {
             var data = new List<User>();
-            using (var db = new ApdatabaseContext())
+            using (var db = new AppDbContext.ApdatabaseContext())
             {
                 data = db.Users.ToList();
             }
@@ -26,7 +26,7 @@ namespace ProjektAnjaParson_Backend.Controllers
         public User Get(int id)
         {
             var data = new User();
-            using (var db = new ApdatabaseContext())
+            using (var db = new AppDbContext.ApdatabaseContext())
             {
                 data = db.Users.SingleOrDefault(c => c.Id == id);
             }
@@ -37,7 +37,7 @@ namespace ProjektAnjaParson_Backend.Controllers
         [HttpPost]
         public void Post(int fullNameId, string username, string password)
         {
-            using (var db = new ApdatabaseContext())
+            using (var db = new AppDbContext.ApdatabaseContext())
             {
                 var data = db.Users;
                     
@@ -55,7 +55,7 @@ namespace ProjektAnjaParson_Backend.Controllers
         [HttpPut("{id}")]
         public void Put(int id, int fullNameId, string password)
         {
-            using (var db = new ApdatabaseContext())
+            using (var db = new AppDbContext.ApdatabaseContext())
             {
                 var data = db.Users;
 
@@ -73,7 +73,7 @@ namespace ProjektAnjaParson_Backend.Controllers
         [HttpDelete("{id}")]
         public void Put(int id)
         {
-            using (var db = new ApdatabaseContext())
+            using (var db = new AppDbContext.ApdatabaseContext())
             {
                 var data = db.Users;
                 var selected = data.SingleOrDefault(c => c.Id == id);

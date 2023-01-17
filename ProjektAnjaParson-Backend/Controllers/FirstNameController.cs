@@ -14,7 +14,7 @@ namespace ProjektAnjaParson_Backend.Controllers
         public IEnumerable<FirstName> Get()
         {
             var data = new List<FirstName>();
-            using (var db = new ApplicationDbContext.ApplicationDbContext())
+            using (var db = new AppDbContext.ApdatabaseContext())
             {
                 data = db.FirstNames.ToList();
             }
@@ -27,7 +27,7 @@ namespace ProjektAnjaParson_Backend.Controllers
         public FirstName Get(int id)
         {
             var data = new FirstName();
-            using (var db = new ApplicationDbContext.ApplicationDbContext())
+            using (var db = new AppDbContext.ApdatabaseContext())
             {
                 data = db.FirstNames.SingleOrDefault(c => c.Id == id); ;
             }
@@ -39,7 +39,7 @@ namespace ProjektAnjaParson_Backend.Controllers
         [HttpPost]
         public void Post(string firstName)
         {
-            using (var db = new ApplicationDbContext.ApplicationDbContext())
+            using (var db = new AppDbContext.ApdatabaseContext())
             {
                 var exist = db.FirstNames.SingleOrDefault(c => c.FirstName1.ToLower() == firstName.ToLower());
                 if (exist == null)
@@ -57,7 +57,7 @@ namespace ProjektAnjaParson_Backend.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-            using (var db = new ApplicationDbContext.ApplicationDbContext())
+            using (var db = new AppDbContext.ApdatabaseContext())
             {
                 var data = db.FirstNames.SingleOrDefault(c => c.Id == c.Id);
                 if (data != null)

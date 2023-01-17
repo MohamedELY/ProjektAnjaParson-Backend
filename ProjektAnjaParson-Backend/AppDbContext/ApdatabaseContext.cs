@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using ProjektAnjaParson_Backend.Models;
 
-namespace ProjektAnjaParson_Backend.ApplicationDbContext;
+namespace ProjektAnjaParson_Backend.AppDbContext;
 
-public partial class ApplicationDbContext : DbContext
+public partial class ApdatabaseContext : DbContext
 {
-    public ApplicationDbContext()
+    public ApdatabaseContext()
     {
     }
 
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+    public ApdatabaseContext(DbContextOptions<ApdatabaseContext> options)
         : base(options)
     {
     }
@@ -42,30 +42,27 @@ public partial class ApplicationDbContext : DbContext
     {
         modelBuilder.Entity<Category>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Category__3214EC07C938D55B");
+            entity.HasKey(e => e.Id).HasName("PK__Category__3214EC079A0E7EFB");
 
             entity.ToTable("Category");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.Icon).HasMaxLength(1000);
             entity.Property(e => e.Name).HasMaxLength(50);
         });
 
         modelBuilder.Entity<Country>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Country__3214EC076661A76F");
+            entity.HasKey(e => e.Id).HasName("PK__Country__3214EC07CA88B905");
 
             entity.ToTable("Country");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.Name).HasMaxLength(50);
         });
 
         modelBuilder.Entity<FirstName>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__FirstNam__3214EC07D91C37CB");
+            entity.HasKey(e => e.Id).HasName("PK__FirstNam__3214EC079FC66422");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.FirstName1)
                 .HasMaxLength(25)
                 .HasColumnName("FirstName");
@@ -73,9 +70,7 @@ public partial class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<FullName>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__FullName__3214EC07859C396C");
-
-            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.HasKey(e => e.Id).HasName("PK__FullName__3214EC07E7DB1EC8");
 
             entity.HasOne(d => d.FirstName).WithMany(p => p.FullNames)
                 .HasForeignKey(d => d.FirstNameId)
@@ -88,9 +83,8 @@ public partial class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<LastName>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__LastName__3214EC07D828783E");
+            entity.HasKey(e => e.Id).HasName("PK__LastName__3214EC0715072CD7");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.LastName1)
                 .HasMaxLength(25)
                 .HasColumnName("LastName");
@@ -98,11 +92,10 @@ public partial class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<Location>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Location__3214EC07226B288C");
+            entity.HasKey(e => e.Id).HasName("PK__Location__3214EC07A0C30D0C");
 
             entity.ToTable("Location");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.Name).HasMaxLength(88);
 
             entity.HasOne(d => d.Country).WithMany(p => p.Locations)
@@ -112,14 +105,14 @@ public partial class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<Place>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Place__3214EC07A45756A0");
+            entity.HasKey(e => e.Id).HasName("PK__Place__3214EC07ACF4C66A");
 
             entity.ToTable("Place");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.Address)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+            entity.Property(e => e.Name).HasMaxLength(35);
 
             entity.HasOne(d => d.Category).WithMany(p => p.Places)
                 .HasForeignKey(d => d.CategoryId)
@@ -132,11 +125,10 @@ public partial class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<Post>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Post__3214EC07341512A8");
+            entity.HasKey(e => e.Id).HasName("PK__Post__3214EC070C47AFE6");
 
             entity.ToTable("Post");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.Description).HasMaxLength(900);
             entity.Property(e => e.Title).HasMaxLength(50);
 
@@ -151,9 +143,8 @@ public partial class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Users__3214EC07A88DC763");
+            entity.HasKey(e => e.Id).HasName("PK__Users__3214EC07D6D68288");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
             entity.Property(e => e.Password).HasMaxLength(30);
             entity.Property(e => e.Username).HasMaxLength(30);
 

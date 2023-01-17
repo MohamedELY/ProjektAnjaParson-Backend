@@ -14,7 +14,7 @@ namespace ProjektAnjaParson_Backend.Controllers
         public IEnumerable<Place> Get()
         {
             var data = new List<Place>();
-            using (var db = new ApplicationDbContext.ApplicationDbContext())
+            using (var db = new AppDbContext.ApdatabaseContext())
             {
                 data = db.Places.ToList();
             }
@@ -26,7 +26,7 @@ namespace ProjektAnjaParson_Backend.Controllers
         public Place Get(int id)
         {
             var data = new Place();
-            using (var db = new ApplicationDbContext.ApplicationDbContext())
+            using (var db = new AppDbContext.ApdatabaseContext())
             {
                 data = db.Places.SingleOrDefault(c => c.Id == id);
             }
@@ -37,7 +37,7 @@ namespace ProjektAnjaParson_Backend.Controllers
         [HttpPost]
         public void Post([FromBody] string name, int locationId, string adress, int categoryId)
         {
-            using (var db = new ApplicationDbContext.ApplicationDbContext())
+            using (var db = new AppDbContext.ApdatabaseContext())
             {
                 var data = db.Places;
                 data.Add(new Place() { Name = name, LocationId = locationId, Address = adress, CategoryId = categoryId});
@@ -49,7 +49,7 @@ namespace ProjektAnjaParson_Backend.Controllers
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
-            using (var db = new ApplicationDbContext.ApplicationDbContext())
+            using (var db = new AppDbContext.ApdatabaseContext())
             {
                 var data = db.Places;
 
@@ -66,7 +66,7 @@ namespace ProjektAnjaParson_Backend.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-            using (var db = new ApplicationDbContext.ApplicationDbContext())
+            using (var db = new AppDbContext.ApdatabaseContext())
             {
                 var data = db.Places;
                 
