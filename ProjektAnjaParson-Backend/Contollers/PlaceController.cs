@@ -35,7 +35,7 @@ namespace ProjektAnjaParson_Backend.Contollers
 
         // POST api/<PlaceController>
         [HttpPost]
-        public void Post([FromBody] string name, int locationId, string adress, int categoryId)
+        public void Post(string name, int locationId, string adress, int categoryId)
         {
             using (var db = new AppDbContext.ApdatabaseContext())
             {
@@ -47,7 +47,7 @@ namespace ProjektAnjaParson_Backend.Contollers
 
         // PUT api/<PlaceController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public void Put(int id, string? name, int? locationId, string? adress, int? categoryId)
         {
             using (var db = new AppDbContext.ApdatabaseContext())
             {
@@ -56,7 +56,10 @@ namespace ProjektAnjaParson_Backend.Contollers
                 var selected = data.SingleOrDefault(c => c.Id == id);
                 if (selected != null)
                 {
-                    selected.Name = value;
+                    selected.Name = name ??= selected.Name;
+                    selected.LocationId = locationId ??= selected.LocationId;
+                    selected.Address = adress ??= selected.Address;
+                    selected.CategoryId = categoryId ??= selected.CategoryId;
                     db.SaveChanges();
                 }
             }

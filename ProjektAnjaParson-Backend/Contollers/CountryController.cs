@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProjektAnjaParson_Backend.AppDbContext;
 using ProjektAnjaParson_Backend.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -14,7 +15,7 @@ namespace ProjektAnjaParson_Backend.Contollers
         public IEnumerable<Country> Get()
         {
             var data = new List<Country>();
-            using (var db = new AppDbContext.ApdatabaseContext())
+            using (var db = new ApdatabaseContext())
             {
                 data = db.Countries.ToList();
             }
@@ -27,7 +28,7 @@ namespace ProjektAnjaParson_Backend.Contollers
         public Country Get(int id)
         {
             var data = new Country();
-            using (var db = new AppDbContext.ApdatabaseContext())
+            using (var db = new ApdatabaseContext())
             {
                 data = db.Countries.SingleOrDefault(c => c.Id == id);
             }
@@ -38,7 +39,7 @@ namespace ProjektAnjaParson_Backend.Contollers
         [HttpPost]
         public void Post([FromBody] string name)
         {
-            using (var db = new AppDbContext.ApdatabaseContext())
+            using (var db = new ApdatabaseContext())
             {
                 var data = db.Countries;
                 data.Add(new Country() { Name = name });
@@ -50,7 +51,7 @@ namespace ProjektAnjaParson_Backend.Contollers
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string name)
         {
-            using (var db = new AppDbContext.ApdatabaseContext())
+            using (var db = new ApdatabaseContext())
             {
                 var data = db.Countries;
 
