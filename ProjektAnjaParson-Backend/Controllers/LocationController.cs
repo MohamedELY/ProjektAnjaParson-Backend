@@ -15,7 +15,7 @@ namespace ProjektAnjaParson_Backend.Controllers
         public IEnumerable<Location> Get()
         {
             var data = new List<Location>();
-            using (var db = new AppDbContext())
+            using (var db = new ApplicationDbContext.ApplicationDbContext())
             {
                 data = db.Locations.ToList();
             }
@@ -27,7 +27,7 @@ namespace ProjektAnjaParson_Backend.Controllers
         public Location Get(int id)
         {
             var data = new Location();
-            using (var db = new AppDbContext())
+            using (var db = new ApplicationDbContext.ApplicationDbContext())
             {
                 data = db.Locations.SingleOrDefault(c => c.Id == id);
             }
@@ -38,7 +38,7 @@ namespace ProjektAnjaParson_Backend.Controllers
         [HttpPost]
         public void Post([FromBody] string value)
         {
-            using (var db = new AppDbContext())
+            using (var db = new ApplicationDbContext.ApplicationDbContext())
             {
                 var data = db.Locations;
                 data.Add(new Location() { Name = value });
@@ -50,7 +50,7 @@ namespace ProjektAnjaParson_Backend.Controllers
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
-            using (var db = new AppDbContext())
+            using (var db = new ApplicationDbContext.ApplicationDbContext())
             {
                 var data = db.Locations;
 

@@ -40,7 +40,7 @@ namespace ProjektAnjaParson_Backend.Controllers
         [HttpPost]
         public void Post(string firstName)
         {
-            using (var db = new ApdatabaseContext())
+            using (var db = new ApplicationDbContext.ApplicationDbContext())
             {
                 var exist = db.FirstNames.SingleOrDefault(c => c.FirstName1.ToLower() == firstName.ToLower());
                 if (exist == null)
