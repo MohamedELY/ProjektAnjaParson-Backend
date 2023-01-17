@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProjektAnjaParson_Backend.ApplicationDbContext;
 using ProjektAnjaParson_Backend.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -14,7 +15,7 @@ namespace ProjektAnjaParson_Backend.Controllers
         public IEnumerable<Category> Get()
         {
             var data = new List<Category>();
-            using (var db = new ApdatabaseContext())
+            using (var db = new ApplicationDbContext.ApplicationDbContext())
             {
                 data = db.Categories.ToList();
             }
@@ -27,7 +28,7 @@ namespace ProjektAnjaParson_Backend.Controllers
         public Category Get(int id)
         {
             var data = new Category();
-            using (var db = new ApdatabaseContext())
+            using (var db = new ApplicationDbContext.ApplicationDbContext())
             {
                 data = db.Categories.SingleOrDefault(c => c.Id == id);
             }
@@ -39,7 +40,7 @@ namespace ProjektAnjaParson_Backend.Controllers
         [HttpPost]
         public void Post( string name, string icon)
         {
-            using (var db = new ApdatabaseContext())
+            using (var db = new ApplicationDbContext.ApplicationDbContext())
             {
                 var data = db.Categories;
                 data.Add(new Category() { Name = name, Icon = icon});
@@ -52,7 +53,7 @@ namespace ProjektAnjaParson_Backend.Controllers
         [HttpPut("{id}")]
         public void Put(int id, string name, string icon)
         {
-            using (var db = new ApdatabaseContext())
+            using (var db = new ApplicationDbContext.ApplicationDbContext())
             {
                 var data = db.Categories;
 
