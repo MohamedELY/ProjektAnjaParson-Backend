@@ -2,39 +2,39 @@
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace ProjektAnjaParson_Backend.Controllers
+namespace ProjektAnjaParson_Backend.Contollers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PostController : ControllerBase
+    public class LastNameController : ControllerBase
     {
-        // GET: api/PostController
+        // GET: api/<LastNameController>
         [HttpGet]
         public IEnumerable<string> Get()
         {
             return new string[] { "value1", "value2" };
         }
 
-        // GET api/PostController/5
+        // GET api/<LastNameController>/5
         [HttpGet("{id}")]
         public string Get(int id)
         {
             return "value";
         }
 
-        // POST api/PostController
+        // POST api/<LastNameController>
         [HttpPost]
         public void Post([FromBody] string value)
         {
         }
 
-        // PUT api/PostController/5
+        // PUT api/<LastNameController>/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
         }
 
-        // DELETE api/PostController/5
+        // DELETE api/<LastNameController>/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {

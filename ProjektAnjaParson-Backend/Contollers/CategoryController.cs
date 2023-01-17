@@ -4,7 +4,7 @@ using ProjektAnjaParson_Backend.Models;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 
-namespace ProjektAnjaParson_Backend.Controllers
+namespace ProjektAnjaParson_Backend.Contollers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -38,12 +38,12 @@ namespace ProjektAnjaParson_Backend.Controllers
 
         // POST api/<CategoryController>
         [HttpPost]
-        public void Post( string name, string icon)
+        public void Post(string name, string icon)
         {
             using (var db = new AppDbContext.ApdatabaseContext())
             {
                 var data = db.Categories;
-                data.Add(new Category() { Name = name, Icon = icon});
+                data.Add(new Category() { Name = name, Icon = icon });
                 db.SaveChanges();
             }
             Console.WriteLine("Category Has been Saved to DB");
@@ -58,11 +58,12 @@ namespace ProjektAnjaParson_Backend.Controllers
                 var data = db.Categories;
 
                 var selected = data.SingleOrDefault(c => c.Id == id);
-                if (selected != null) {
-                    
+                if (selected != null)
+                {
+
                     selected.Name = name;
                     selected.Icon = icon;
-                         
+
                     db.SaveChanges();
                 }
             }

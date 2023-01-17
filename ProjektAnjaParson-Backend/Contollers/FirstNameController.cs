@@ -3,7 +3,7 @@ using ProjektAnjaParson_Backend.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace ProjektAnjaParson_Backend.Controllers
+namespace ProjektAnjaParson_Backend.Contollers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -46,7 +46,7 @@ namespace ProjektAnjaParson_Backend.Controllers
                 {
                     var data = db.FirstNames;
                     data.Add(new FirstName() { FirstName1 = firstName });
-                    
+
                     db.SaveChanges();
                 }
             }
