@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ProjektAnjaParson_Backend.ApplicationDbContext;
+using ProjektAnjaParson_Backend.AppDbContext;
 using ProjektAnjaParson_Backend.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -15,7 +15,7 @@ namespace ProjektAnjaParson_Backend.Contollers
         public IEnumerable<Location> Get()
         {
             var data = new List<Location>();
-            using (var db = new AppDbContext.ApdatabaseContext())
+            using (var db = new ApdatabaseContext())
             {
                 data = db.Locations.ToList();
             }
@@ -27,7 +27,7 @@ namespace ProjektAnjaParson_Backend.Contollers
         public Location Get(int id)
         {
             var data = new Location();
-            using (var db = new AppDbContext.ApdatabaseContext())
+            using (var db = new ApdatabaseContext())
             {
                 data = db.Locations.SingleOrDefault(c => c.Id == id);
             }
@@ -38,7 +38,7 @@ namespace ProjektAnjaParson_Backend.Contollers
         [HttpPost]
         public void Post([FromBody] string value)
         {
-            using (var db = new AppDbContext.ApdatabaseContext())
+            using (var db = new ApdatabaseContext())
             {
                 var data = db.Locations;
                 data.Add(new Location() { Name = value });
@@ -50,7 +50,7 @@ namespace ProjektAnjaParson_Backend.Contollers
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
-            using (var db = new AppDbContext.ApdatabaseContext())
+            using (var db = new ApdatabaseContext())
             {
                 var data = db.Locations;
 
