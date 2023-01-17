@@ -58,6 +58,7 @@ namespace ProjektAnjaParson_Backend.Contollers
         {
             using (var db = new AppDbContext.ApdatabaseContext())
             {
+                
                 var data = db.Users;
 
                 var selected = data.SingleOrDefault(c => c.Id == id);
@@ -74,18 +75,21 @@ namespace ProjektAnjaParson_Backend.Contollers
         [HttpDelete("{id}")]
         public void Put(int id)
         {
-            using (var db = new AppDbContext.ApdatabaseContext())
-            {
-                var data = db.Users;
-                var selected = data.SingleOrDefault(c => c.Id == id);
 
-                if (selected != null)
-                {
-                    //db.Remove(selected.Posts);
-                    db.Remove(selected);
+            // Todo 
 
-                }
-            }
+            //using (var db = new AppDbContext.ApdatabaseContext())
+            //{
+            //    var data = db.Users;
+            //    var selected = data.SingleOrDefault(c => c.Id == id);
+
+            //    if (selected != null)
+            //    {
+            //        //db.Remove(selected.Posts);
+            //        db.Remove(selected);
+            //        db.SaveChanges();
+            //    }
+            //}
         }
     }
 }

@@ -8,9 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ApplicationDbContext\**" />
     <Compile Remove="Controllers\**" />
+    <Content Remove="ApplicationDbContext\**" />
     <Content Remove="Controllers\**" />
+    <EmbeddedResource Remove="ApplicationDbContext\**" />
     <EmbeddedResource Remove="Controllers\**" />
+    <None Remove="ApplicationDbContext\**" />
     <None Remove="Controllers\**" />
   </ItemGroup>
 
@@ -25,7 +29,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ApplicationDbContext\" />
     <Folder Include="Models\" />
   </ItemGroup>
 

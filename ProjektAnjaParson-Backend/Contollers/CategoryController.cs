@@ -73,7 +73,7 @@ namespace ProjektAnjaParson_Backend.Contollers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-            using (var db = new ApplicationDbContext.ApplicationDbContext())
+            using (var db = new AppDbContext.ApdatabaseContext())
             {
                 var data = db.Categories.SingleOrDefault(c => c.Id == c.Id);
                 if (data != null)
