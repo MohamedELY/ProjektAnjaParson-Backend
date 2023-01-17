@@ -120,9 +120,6 @@ public partial class ApplicationDbContext : DbContext
             entity.Property(e => e.Address)
                 .HasMaxLength(50)
                 .IsUnicode(false);
-            entity.Property(e => e.PostId)
-                .HasMaxLength(50)
-                .IsUnicode(false);
 
             entity.HasOne(d => d.Category).WithMany(p => p.Places)
                 .HasForeignKey(d => d.CategoryId)
