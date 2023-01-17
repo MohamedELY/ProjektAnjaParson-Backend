@@ -55,9 +55,21 @@ namespace ProjektAnjaParson_Backend.Contollers
 
         // POST api/<FullNameController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post([FromBody] int lnId, int fnId)
         {
-            
+            using (var db = new AppDbContext.ApdatabaseContext())
+            {
+                var exist = db.FullNames.SingleOrDefault(c => c.FirstNameId == fnId && c.LastNameId == lnId);
+                if (exist == null)
+                {
+                    var data = db.FullNames;
+                    data.Add(new FullName() { FirstNameId = fnId, LastNameId = lnId });
+
+                    db.SaveChanges();
+                }
+            }
+            Console.WriteLine("First Name Has been Saved to DB");
+
         }
 
         // PUT api/<FullNameController>/5
