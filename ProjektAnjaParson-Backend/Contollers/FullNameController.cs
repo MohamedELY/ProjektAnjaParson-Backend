@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProjektAnjaParson_Backend.Models;
+using ProjektAnjaParson_Backend.DataModels;
+using System.Linq;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,24 +11,65 @@ namespace ProjektAnjaParson_Backend.Contollers
     [ApiController]
     public class FullNameController : ControllerBase
     {
-        // GET: api/<FullNameController>
+        //GET: api/<FullNameController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public List<CFullName> Get()
         {
-            return new string[] { "value1", "value2" };
+
+            using (var db = new AppDbContext.ApdatabaseContext())
+            {
+                var query = (from flname in db.FullNames
+                             join fname in db.FirstNames on flname.FirstNameId equals fname.Id
+                             join lname in db.LastNames on flname.LastNameId equals lname.Id
+                             select new CFullName
+                             {
+                                 Id = flname.Id,
+                                 FirstName = fname.FirstName1,
+                                 LastName = lname.LastName1
+                             }).ToList();
+                Console.WriteLine("Retriving Full Name's From DB");
+                return query;
+            }
         }
 
         // GET api/<FullNameController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public CFullName Get(int id)
         {
-            return "value";
+            using (var db = new AppDbContext.ApdatabaseContext())
+            {
+                var query = (from flname in db.FullNames
+                             join fname in db.FirstNames on flname.FirstNameId equals fname.Id
+                             join lname in db.LastNames on flname.LastNameId equals lname.Id
+                             where flname.Id == id
+                             select new CFullName
+                             {
+                                 Id = flname.Id,
+                                 FirstName = fname.FirstName1,
+                                 LastName = lname.LastName1
+                             }).First();
+                Console.WriteLine("Retriving Full Name From DB");
+                return query;
+            }
         }
 
         // POST api/<FullNameController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post([FromBody] int lnId, int fnId)
         {
+            using (var db = new AppDbContext.ApdatabaseContext())
+            {
+                var exist = db.FullNames.SingleOrDefault(c => c.FirstNameId == fnId && c.LastNameId == lnId);
+                if (exist == null)
+                {
+                    var data = db.FullNames;
+                    data.Add(new FullName() { FirstNameId = fnId, LastNameId = lnId });
+
+                    db.SaveChanges();
+                }
+            }
+            Console.WriteLine("First Name Has been Saved to DB");
+
         }
 
         // PUT api/<FullNameController>/5
