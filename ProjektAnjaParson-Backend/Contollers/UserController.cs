@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProjektAnjaParson_Backend.Models;
-
+using ProjektAnjaParson_Backend.DataModels;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -12,26 +12,49 @@ namespace ProjektAnjaParson_Backend.Contollers
     {
         // GET: api/<UserController>
         [HttpGet]
-        public IEnumerable<User> Get()
-        {
-            var data = new List<User>();
+        public List<CUser> Get()
+        {     
             using (var db = new AppDbContext.ApdatabaseContext())
             {
-                data = db.Users.ToList();
+                var query = (from u in db.Users
+                             join flname in db.FullNames on u.FullNameId equals flname.Id
+                             join fname in db.FirstNames on flname.FirstNameId equals fname.Id
+                             join lname in db.LastNames on flname.LastNameId equals lname.Id
+                             select new CUser
+                             {
+                                 Id = u.Id,
+                                 Firstname = fname.FirstName1,
+                                 Lastname = lname.LastName1,
+                                 Username = u.Username,
+                                 Password = u.Password
+                             }).ToList();
+                return query;
             }
-            return data;
+            
         }
 
         // GET api/<UserController>/5
         [HttpGet("{id}")]
-        public User Get(int id)
+        public CUser Get(int id)
         {
-            var data = new User();
             using (var db = new AppDbContext.ApdatabaseContext())
             {
-                data = db.Users.SingleOrDefault(c => c.Id == id);
+                var query = (from u in db.Users
+                            join flname in db.FullNames on u.FullNameId equals flname.Id
+                            join fname in db.FirstNames on flname.FirstNameId equals fname.Id
+                            join lname in db.LastNames on flname.LastNameId equals lname.Id
+                            where u.Id == id
+                            select new CUser
+                            {
+                                Id = u.Id,
+                                Firstname = fname.FirstName1,
+                                Lastname = lname.LastName1,
+                                Username = u.Username,
+                                Password = u.Password
+                            }).First();
+            return query;
             }
-            return data;
+
         }
 
         // POST api/<UserController>
@@ -58,6 +81,7 @@ namespace ProjektAnjaParson_Backend.Contollers
         {
             using (var db = new AppDbContext.ApdatabaseContext())
             {
+                
                 var data = db.Users;
 
                 var selected = data.SingleOrDefault(c => c.Id == id);
@@ -74,18 +98,21 @@ namespace ProjektAnjaParson_Backend.Contollers
         [HttpDelete("{id}")]
         public void Put(int id)
         {
-            using (var db = new AppDbContext.ApdatabaseContext())
-            {
-                var data = db.Users;
-                var selected = data.SingleOrDefault(c => c.Id == id);
 
-                if (selected != null)
-                {
-                    //db.Remove(selected.Posts);
-                    db.Remove(selected);
+            // Todo 
 
-                }
-            }
+            //using (var db = new AppDbContext.ApdatabaseContext())
+            //{
+            //    var data = db.Users;
+            //    var selected = data.SingleOrDefault(c => c.Id == id);
+
+            //    if (selected != null)
+            //    {
+            //        //db.Remove(selected.Posts);
+            //        db.Remove(selected);
+            //        db.SaveChanges();
+            //    }
+            //}
         }
     }
 }
