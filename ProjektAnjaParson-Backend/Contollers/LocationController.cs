@@ -36,19 +36,19 @@ namespace ProjektAnjaParson_Backend.Contollers
 
         // POST api/<LocationController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post(string name, int countryId)
         {
             using (var db = new ApdatabaseContext())
             {
                 var data = db.Locations;
-                data.Add(new Location() { Name = value });
+                data.Add(new Location() { Name = name, CountryId = countryId });
                 db.SaveChanges();
             }
         }
 
         // PUT api/<LocationController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public void Put(int id, string? name, int? countryId)
         {
             using (var db = new ApdatabaseContext())
             {
@@ -57,6 +57,8 @@ namespace ProjektAnjaParson_Backend.Contollers
                 var selected = data.SingleOrDefault(c => c.Id == id);
                 if (selected != null)
                 {
+                    selected.Name= name ??= selected.Name;
+                    selected.CountryId = countryId ??= selected.CountryId;
                     db.SaveChanges();
                 }
             }
@@ -66,6 +68,15 @@ namespace ProjektAnjaParson_Backend.Contollers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+            using (var db = new AppDbContext.ApdatabaseContext())
+            {
+                var data = db.Locations;
+
+                var selected = data.Single(c => c.Id == id);
+
+                data.Remove(selected);
+                db.SaveChanges();
+            }
         }
     }
 }
