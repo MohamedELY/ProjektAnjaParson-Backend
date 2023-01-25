@@ -9,11 +9,11 @@ namespace ProjektAnjaParson_Backend.Middleware
     public class GlobalExceptionHandlingMiddleware : IMiddleware
     {
         private readonly ILogger<GlobalExceptionHandlingMiddleware> _logger;
-        public GlobalExceptionHandlingMiddleware(ILogger<GlobalExceptionHandlingMiddleware> logger) 
+        public GlobalExceptionHandlingMiddleware(ILogger<GlobalExceptionHandlingMiddleware> logger)
         {
             _logger = logger;
-        } 
-            
+        }
+
 
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
@@ -25,12 +25,14 @@ namespace ProjektAnjaParson_Backend.Middleware
             {
                 // Log "true" error to devs, e.g. "object reference..."
                 _logger.LogError(ex, ex.Message);
+
                 // Write log to .log file, showing error message and method that threw exception.
-                WriteLog(ex.Message + " in the method "+ ex.TargetSite + "\n");
+                WriteLog(ex.Message + " in the method " + ex.TargetSite + "\n");
                 context.Response.StatusCode =
                     (int)HttpStatusCode.InternalServerError;
 
                 // Create a readable message to show the consumer.
+                // This could be manipulated based on the status code returned.
                 ProblemDetails problem = new()
                 {
                     Status = (int)HttpStatusCode.InternalServerError,
@@ -40,7 +42,7 @@ namespace ProjektAnjaParson_Backend.Middleware
                 };
 
                 string json = JsonSerializer.Serialize(problem);
-                
+
                 // Must be set before WriteAsync.
                 context.Response.ContentType = "application/json";
 
@@ -53,7 +55,7 @@ namespace ProjektAnjaParson_Backend.Middleware
         /// <param name="strLog"></param>
         public static void WriteLog(string strLog)
         {
-            string logFilePath = Directory.GetCurrentDirectory() + "\\logs\\" + DateTime.UtcNow.ToString("ddMMyyyy_HHmmss") + "." + "log";
+            string logFilePath = Directory.GetCurrentDirectory() + "\\logs\\" + DateTime.Now.ToString("ddMMyyyy_HHmmss") + "." + "log";
             FileInfo logFileInfo = new FileInfo(logFilePath);
             DirectoryInfo logDirInfo = new DirectoryInfo(logFileInfo.DirectoryName);
             if (!logDirInfo.Exists) logDirInfo.Create();
@@ -70,7 +72,6 @@ namespace ProjektAnjaParson_Backend.Middleware
                     sb.Clear();
                 }
             }
-
         }
     }
 }

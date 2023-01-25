@@ -19,8 +19,8 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(
     ));
 
 builder.Services.AddLogging();
-
-builder.Services.AddTransient<GlobalExceptionHandlingMiddleware>();
+// Allows for one instance per connection.
+builder.Services.AddScoped<GlobalExceptionHandlingMiddleware>();
 
 
 
@@ -32,6 +32,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseHttpsRedirection();
 }
 
 //app.UseHttpsRedirection();

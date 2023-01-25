@@ -24,6 +24,12 @@ namespace ProjektAnjaParson_Backend.Crontollers
         public IEnumerable<Country> GetCountries()
         {
             Countries = _db.Countries;
+            if(Countries == null)
+            {
+                throw new NullReferenceException(
+                $"Could not get countries from database. Check if server is running."
+                );
+            }
             return Countries;
         }
 
