@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ProjektAnjaParson_Backend.AppDbContext;
+using ProjektAnjaParson_Backend.ApplicationDbContext;
 using ProjektAnjaParson_Backend.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace ProjektAnjaParson_Backend.Contollers
+namespace ProjektAnjaParson_Backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -15,7 +15,7 @@ namespace ProjektAnjaParson_Backend.Contollers
         public IEnumerable<Location> Get()
         {
             var data = new List<Location>();
-            using (var db = new ApdatabaseContext())
+            using (var db = new AppDbContext())
             {
                 data = db.Locations.ToList();
             }
@@ -27,7 +27,7 @@ namespace ProjektAnjaParson_Backend.Contollers
         public Location Get(int id)
         {
             var data = new Location();
-            using (var db = new ApdatabaseContext())
+            using (var db = new AppDbContext())
             {
                 data = db.Locations.SingleOrDefault(c => c.Id == id);
             }
@@ -38,7 +38,7 @@ namespace ProjektAnjaParson_Backend.Contollers
         [HttpPost]
         public void Post(string name, int countryId)
         {
-            using (var db = new ApdatabaseContext())
+            using (var db = new AppDbContext())
             {
                 var data = db.Locations;
                 data.Add(new Location() { Name = name, CountryId = countryId });
@@ -50,7 +50,7 @@ namespace ProjektAnjaParson_Backend.Contollers
         [HttpPut("{id}")]
         public void Put(int id, string? name, int? countryId)
         {
-            using (var db = new ApdatabaseContext())
+            using (var db = new AppDbContext())
             {
                 var data = db.Locations;
 
@@ -68,7 +68,7 @@ namespace ProjektAnjaParson_Backend.Contollers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-            using (var db = new AppDbContext.ApdatabaseContext())
+            using (var db = new AppDbContext())
             {
                 var data = db.Locations;
 

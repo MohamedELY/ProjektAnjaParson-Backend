@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProjektAnjaParson_Backend.Models;
+using ProjektAnjaParson_Backend.ApplicationDbContext;
 using ProjektAnjaParson_Backend.DataModels;
 using System.Linq;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace ProjektAnjaParson_Backend.Contollers
+namespace ProjektAnjaParson_Backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -16,7 +17,7 @@ namespace ProjektAnjaParson_Backend.Contollers
         public List<CFullName> Get()
         {
 
-            using (var db = new AppDbContext.ApdatabaseContext())
+            using (var db = new AppDbContext())
             {
                 var query = (from flname in db.FullNames
                              join fname in db.FirstNames on flname.FirstNameId equals fname.Id
@@ -36,7 +37,7 @@ namespace ProjektAnjaParson_Backend.Contollers
         [HttpGet("{id}")]
         public CFullName Get(int id)
         {
-            using (var db = new AppDbContext.ApdatabaseContext())
+            using (var db = new AppDbContext())
             {
                 var query = (from flname in db.FullNames
                              join fname in db.FirstNames on flname.FirstNameId equals fname.Id
@@ -57,7 +58,7 @@ namespace ProjektAnjaParson_Backend.Contollers
         [HttpPost]
         public void Post([FromBody] int lnId, int fnId)
         {
-            using (var db = new AppDbContext.ApdatabaseContext())
+            using (var db = new AppDbContext())
             {
                 var exist = db.FullNames.SingleOrDefault(c => c.FirstNameId == fnId && c.LastNameId == lnId);
                 if (exist == null)

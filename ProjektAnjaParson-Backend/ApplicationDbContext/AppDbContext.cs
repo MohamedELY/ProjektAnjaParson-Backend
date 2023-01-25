@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using ProjektAnjaParson_Backend.Models;
 
-namespace ProjektAnjaParson_Backend.AppDbContext;
+namespace ProjektAnjaParson_Backend.ApplicationDbContext;
 
-public partial class ApdatabaseContext : DbContext
+public partial class AppDbContext : DbContext
 {
-    public ApdatabaseContext()
+    public AppDbContext()
     {
     }
 
-    public ApdatabaseContext(DbContextOptions<ApdatabaseContext> options)
+    public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)
     {
     }

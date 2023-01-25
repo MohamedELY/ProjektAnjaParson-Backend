@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProjektAnjaParson_Backend.Models;
+using ProjektAnjaParson_Backend.ApplicationDbContext;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace ProjektAnjaParson_Backend.Contollers
+namespace ProjektAnjaParson_Backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -14,7 +15,7 @@ namespace ProjektAnjaParson_Backend.Contollers
         public IEnumerable<Post> Get()
         {
             var data = new List<Post>();
-            using (var db = new AppDbContext.ApdatabaseContext())
+            using (var db = new AppDbContext())
             {
                 data = db.Posts.ToList();
             }
@@ -27,7 +28,7 @@ namespace ProjektAnjaParson_Backend.Contollers
         public Post Get(int id)
         {
             var data = new Post();
-            using (var db = new AppDbContext.ApdatabaseContext())
+            using (var db = new AppDbContext())
             {
                 data = db.Posts.SingleOrDefault(c => c.Id == id);
             }
@@ -39,7 +40,7 @@ namespace ProjektAnjaParson_Backend.Contollers
         [HttpPost]
         public void Post(int placeId, string title, string description, int userId, bool rating)
         {
-            using (var db = new AppDbContext.ApdatabaseContext())
+            using (var db = new AppDbContext())
             {
                 var data = db.Posts;
                 data.Add(new Post() { PlaceId = placeId, Title = title, Description = description, UserId = userId, Rating = rating });
@@ -52,7 +53,7 @@ namespace ProjektAnjaParson_Backend.Contollers
         [HttpPut("{id}")]
         public void Put(int id, int? placeId, string? title, string? description, int? userId, bool? rating)
         {
-            using (var db = new AppDbContext.ApdatabaseContext())
+            using (var db = new AppDbContext())
             {
                 var data = db.Posts;
 
@@ -74,7 +75,7 @@ namespace ProjektAnjaParson_Backend.Contollers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-            using (var db = new AppDbContext.ApdatabaseContext())
+            using (var db = new AppDbContext())
             {
                 var data = db.Posts.SingleOrDefault(c => c.Id == c.Id);
                 if (data != null)

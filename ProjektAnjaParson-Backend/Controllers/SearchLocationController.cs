@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ProjektAnjaParson_Backend.AppDbContext;
+using ProjektAnjaParson_Backend.ApplicationDbContext;
 using ProjektAnjaParson_Backend.DataModels;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace ProjektAnjaParson_Backend.Contollers
+namespace ProjektAnjaParson_Backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -14,7 +14,7 @@ namespace ProjektAnjaParson_Backend.Contollers
         [HttpGet]
         public IEnumerable<SearchLocation> Get()
         {
-            using (var db = new ApdatabaseContext())
+            using (var db = new AppDbContext())
             {
                 // Combines 4 tables to display Country, Location, Place, and Category Names into one list
                 var query = (from c in db.Countries
@@ -28,7 +28,7 @@ namespace ProjektAnjaParson_Backend.Contollers
                                  Location = l.Name,
                                  Place = p.Name,
                                  Category = cat.Name,
-                             }).ToList();
+                             }).ToList<SearchLocation>();
                 return query;
             }
         }
@@ -44,7 +44,7 @@ namespace ProjektAnjaParson_Backend.Contollers
         [HttpGet("{searchInput}/findLocation")]
         public IEnumerable<SearchLocation> Get(string? searchInput)
         {
-            using (var db = new ApdatabaseContext())
+            using (var db = new AppDbContext())
             {
                 // Combine tables into list
                 var query = (from c in db.Countries
@@ -58,13 +58,13 @@ namespace ProjektAnjaParson_Backend.Contollers
                                  Location = l.Name,
                                  Place = p.Name,
                                  Category = cat.Name
-                             }).ToList();
+                             }).ToList<SearchLocation>();
 
 
                 List<SearchLocation> returnList = new List<SearchLocation>();
 
                 // If searchbar is NOT null or whitespace, show items that contain the searched value
-                if (!String.IsNullOrWhiteSpace(searchInput))
+                if (!string.IsNullOrWhiteSpace(searchInput))
                 {
                     // Converts the search string and list values to lowercase
                     // Searches through for items that contain the searched value

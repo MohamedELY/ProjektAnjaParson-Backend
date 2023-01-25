@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProjektAnjaParson_Backend.Models;
 using ProjektAnjaParson_Backend.DataModels;
+using ProjektAnjaParson_Backend.ApplicationDbContext;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace ProjektAnjaParson_Backend.Contollers
+namespace ProjektAnjaParson_Backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -14,7 +15,7 @@ namespace ProjektAnjaParson_Backend.Contollers
         [HttpGet]
         public List<CUser> Get()
         {     
-            using (var db = new AppDbContext.ApdatabaseContext())
+            using (var db = new AppDbContext())
             {
                 var query = (from u in db.Users
                              join flname in db.FullNames on u.FullNameId equals flname.Id
@@ -37,7 +38,7 @@ namespace ProjektAnjaParson_Backend.Contollers
         [HttpGet("{id}")]
         public CUser Get(int id)
         {
-            using (var db = new AppDbContext.ApdatabaseContext())
+            using (var db = new AppDbContext())
             {
                 var query = (from u in db.Users
                             join flname in db.FullNames on u.FullNameId equals flname.Id
@@ -61,7 +62,7 @@ namespace ProjektAnjaParson_Backend.Contollers
         [HttpPost]
         public void Post(int fullNameId, string username, string password)
         {
-            using (var db = new AppDbContext.ApdatabaseContext())
+            using (var db = new AppDbContext())
             {
                 var data = db.Users;
 
@@ -79,7 +80,7 @@ namespace ProjektAnjaParson_Backend.Contollers
         [HttpPut("{id}")]
         public void Put(int id, int fullNameId, string password)
         {
-            using (var db = new AppDbContext.ApdatabaseContext())
+            using (var db = new AppDbContext())
             {
                 
                 var data = db.Users;

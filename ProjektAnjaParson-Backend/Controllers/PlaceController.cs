@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProjektAnjaParson_Backend.Models;
+using ProjektAnjaParson_Backend.ApplicationDbContext;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace ProjektAnjaParson_Backend.Contollers
+namespace ProjektAnjaParson_Backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -14,7 +15,7 @@ namespace ProjektAnjaParson_Backend.Contollers
         public IEnumerable<Place> Get()
         {
             var data = new List<Place>();
-            using (var db = new AppDbContext.ApdatabaseContext())
+            using (var db = new AppDbContext())
             {
                 data = db.Places.ToList();
             }
@@ -26,7 +27,7 @@ namespace ProjektAnjaParson_Backend.Contollers
         public Place Get(int id)
         {
             var data = new Place();
-            using (var db = new AppDbContext.ApdatabaseContext())
+            using (var db = new AppDbContext())
             {
                 data = db.Places.SingleOrDefault(c => c.Id == id);
             }
@@ -37,7 +38,7 @@ namespace ProjektAnjaParson_Backend.Contollers
         [HttpPost]
         public void Post(string name, int locationId, string adress, int categoryId)
         {
-            using (var db = new AppDbContext.ApdatabaseContext())
+            using (var db = new AppDbContext())
             {
                 var data = db.Places;
                 data.Add(new Place() { Name = name, LocationId = locationId, Address = adress, CategoryId = categoryId });
@@ -49,7 +50,7 @@ namespace ProjektAnjaParson_Backend.Contollers
         [HttpPut("{id}")]
         public void Put(int id, string? name, int? locationId, string? adress, int? categoryId)
         {
-            using (var db = new AppDbContext.ApdatabaseContext())
+            using (var db = new AppDbContext())
             {
                 var data = db.Places;
 
@@ -69,7 +70,7 @@ namespace ProjektAnjaParson_Backend.Contollers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-            using (var db = new AppDbContext.ApdatabaseContext())
+            using (var db = new AppDbContext())
             {
                 var data = db.Places;
 

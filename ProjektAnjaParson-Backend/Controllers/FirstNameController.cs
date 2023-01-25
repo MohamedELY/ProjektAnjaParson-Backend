@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProjektAnjaParson_Backend.ApplicationDbContext;
 using ProjektAnjaParson_Backend.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace ProjektAnjaParson_Backend.Contollers
+namespace ProjektAnjaParson_Backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -14,7 +15,7 @@ namespace ProjektAnjaParson_Backend.Contollers
         public IEnumerable<FirstName> Get()
         {
             var data = new List<FirstName>();
-            using (var db = new AppDbContext.ApdatabaseContext())
+            using (var db = new AppDbContext())
             {
                 data = db.FirstNames.ToList();
             }
@@ -27,7 +28,7 @@ namespace ProjektAnjaParson_Backend.Contollers
         public FirstName Get(int id)
         {
             var data = new FirstName();
-            using (var db = new AppDbContext.ApdatabaseContext())
+            using (var db = new AppDbContext())
             {
                 data = db.FirstNames.SingleOrDefault(c => c.Id == id); ;
             }
@@ -40,7 +41,7 @@ namespace ProjektAnjaParson_Backend.Contollers
         public FirstName Get(string fname)
         {
             var data = new FirstName();
-            using (var db = new AppDbContext.ApdatabaseContext())
+            using (var db = new AppDbContext())
             {
                 data = db.FirstNames.SingleOrDefault(c => c.FirstName1 == fname); ;
             }
@@ -52,7 +53,7 @@ namespace ProjektAnjaParson_Backend.Contollers
         [HttpPost]
         public void Post(string firstName)
         {
-            using (var db = new AppDbContext.ApdatabaseContext())
+            using (var db = new AppDbContext())
             {
                 var exist = db.FirstNames.SingleOrDefault(c => c.FirstName1.ToLower() == firstName.ToLower());
                 if (exist == null)
@@ -70,7 +71,7 @@ namespace ProjektAnjaParson_Backend.Contollers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-            using (var db = new AppDbContext.ApdatabaseContext())
+            using (var db = new AppDbContext())
             {
                 var data = db.FirstNames.SingleOrDefault(c => c.Id == c.Id);
                 if (data != null)

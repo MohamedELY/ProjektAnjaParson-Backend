@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProjektAnjaParson_Backend.Models;
+using ProjektAnjaParson_Backend.ApplicationDbContext;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace ProjektAnjaParson_Backend.Contollers
+namespace ProjektAnjaParson_Backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -14,7 +15,7 @@ namespace ProjektAnjaParson_Backend.Contollers
         public IEnumerable<LastName> Get()
         {
             var data = new List<LastName>();
-            using (var db = new AppDbContext.ApdatabaseContext())
+            using (var db = new AppDbContext())
             {
                 data = db.LastNames.ToList();
             }
@@ -27,7 +28,7 @@ namespace ProjektAnjaParson_Backend.Contollers
         public LastName Get(int id)
         {
             var data = new LastName();
-            using (var db = new AppDbContext.ApdatabaseContext())
+            using (var db = new AppDbContext())
             {
                 data = db.LastNames.SingleOrDefault(c => c.Id == id); ;
             }
@@ -39,7 +40,7 @@ namespace ProjektAnjaParson_Backend.Contollers
         [HttpPost]
         public void Post([FromBody] string lastname)
         {
-            using (var db = new AppDbContext.ApdatabaseContext())
+            using (var db = new AppDbContext())
             {
                 var exist = db.LastNames.SingleOrDefault(c => c.LastName1.ToLower() == lastname.ToLower());
                 if (exist == null)
