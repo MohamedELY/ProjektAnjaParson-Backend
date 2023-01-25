@@ -41,32 +41,27 @@ namespace ProjektAnjaParson_Backend.Crontollers
         [HttpPost]
         public void Post(string name)
         {
-            var categoryCompare = _db.Categories.SingleOrDefault(c => c.Name == name);
-            if (categoryCompare == null)
+            var countryCompare = _db.Countries.SingleOrDefault(c => c.Name == name);
+            if (countryCompare == null)
             {
-                Country = new Country() { Name = name };
-                _db.Countries.Add(Country);
+                _db.Countries.Add(new Country() { Name = name });
                 _db.SaveChanges();
+                Console.WriteLine("Category has been saved to Db");
             }
-            else { throw new NullReferenceException($"Category {name} already exists in database."); }
-
-            Console.WriteLine("Category Has been Saved to DB");
+            else { throw new NullReferenceException($"Country {name} already exists in database."); }
         }
 
         // PUT api/<CountryController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string name)
+        public void Put(int id, string name)
         {
-            using (var db = new AppDbContext())
-            {
-                var data = db.Countries;
+            Country = _db.Countries.Find(id);
 
-                var selected = data.SingleOrDefault(c => c.Id == id);
-                if (selected != null)
-                {
-                    selected.Name = name;
-                    db.SaveChanges();
-                }
+            if (Country != null)
+            {
+                Country.Name = name;
+                _db.Countries.Update(Country);
+                _db.SaveChanges();
             }
         }
 
@@ -75,7 +70,13 @@ namespace ProjektAnjaParson_Backend.Crontollers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-
+            Country = _db.Countries.Find(id);
+            if (Country != null)
+            {
+                _db.Countries.Remove(Country);
+                _db.SaveChanges();
+                Console.WriteLine("Country has been deleted from Db");
+            }
         }
     }
 }

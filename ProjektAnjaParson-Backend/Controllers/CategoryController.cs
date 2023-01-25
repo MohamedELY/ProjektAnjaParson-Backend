@@ -43,17 +43,15 @@ namespace ProjektAnjaParson_Backend.Crontollers
         [HttpPost]
         public void Post(string? name, string icon)
         {
-            
             var categoryCompare = _db.Categories.SingleOrDefault(c => c.Name == name);
             if(categoryCompare == null) 
             {
                 Category = new Category() { Name = name, Icon = icon };
                 _db.Categories.Add(Category);
                 _db.SaveChanges();
+                Console.WriteLine("Category Has been Saved to DB");
             }
             else { throw new NullReferenceException($"Category {name} already exists in database."); }
-            
-            Console.WriteLine("Category Has been Saved to DB");
         }
 
         // PUT api/<CategoryController>/5
