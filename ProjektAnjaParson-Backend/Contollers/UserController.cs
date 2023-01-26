@@ -59,15 +59,17 @@ namespace ProjektAnjaParson_Backend.Contollers
 
         // POST api/<UserController>
         [HttpPost]
-        public void Post(int fullNameId, string username, string password)
+        public void Post(string firstName, string lastName, string username, string password)
         {
             using (var db = new AppDbContext.ApdatabaseContext())
             {
                 var data = db.Users;
 
+                var fullNameID = CFullName.CreateFullName(firstName, lastName);
+
                 data.Add(new User()
                 {
-                    FullNameId = fullNameId,
+                    FullNameId = fullNameID,
                     Username = username,
                     Password = password,
                 });

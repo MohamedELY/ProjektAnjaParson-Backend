@@ -35,6 +35,18 @@ namespace ProjektAnjaParson_Backend.Contollers
             return data;
         }
 
+        [HttpGet("{lname}")]
+        public LastName Get(string lname)
+        {
+            var data = new LastName();
+            using (var db = new AppDbContext.ApdatabaseContext())
+            {
+                data = db.LastNames.SingleOrDefault(c => c.LastName1 == lname); ;
+            }
+            Console.WriteLine("Retriving Last Name From DB");
+            return data;
+        }
+
         // POST api/<LastNameController>
         [HttpPost]
         public void Post([FromBody] string lastname)

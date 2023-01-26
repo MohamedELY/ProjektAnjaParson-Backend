@@ -55,7 +55,7 @@ namespace ProjektAnjaParson_Backend.Contollers
 
         // POST api/<FullNameController>
         [HttpPost]
-        public void Post([FromBody] int lnId, int fnId)
+        public void Post(int lnId, int fnId)
         {
             using (var db = new AppDbContext.ApdatabaseContext())
             {
