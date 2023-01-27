@@ -10,6 +10,15 @@ namespace ProjektAnjaParson_Backend.Controllers
     [ApiController]
     public class LastNameController : ControllerBase
     {
+        private readonly AppDbContext _db;
+        public IEnumerable<LastName> LastNames { get; set; }
+        public LastName LastName { get; set; }
+
+        public LastNameController(AppDbContext db)
+        {
+            _db = db;
+        }
+
         // GET: api/<LastNameController>
         [HttpGet]
         public IEnumerable<LastName> Get()

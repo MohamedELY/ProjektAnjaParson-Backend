@@ -13,8 +13,8 @@ namespace ProjektAnjaParson_Backend.Controllers
     public class UserController : ControllerBase
     {
         private readonly AppDbContext _db;
-        public IEnumerable<Category> Categories { get; set; }
-        public Category Category { get; set; }
+        public IEnumerable<User> Users { get; set; }
+        public new User User { get; set; }
 
         public UserController(AppDbContext db)
         {

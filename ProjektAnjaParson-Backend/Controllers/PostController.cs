@@ -10,6 +10,15 @@ namespace ProjektAnjaParson_Backend.Controllers
     [ApiController]
     public class PostController : ControllerBase
     {
+        private readonly AppDbContext _db;
+        public IEnumerable<Post> Posts { get; set; }
+        public Post PostFromDb { get; set; }
+       
+        public PostController(AppDbContext db)
+        {
+            _db = db;
+        }
+
         // GET: api/PostController
         [HttpGet]
         public IEnumerable<Post> Get()

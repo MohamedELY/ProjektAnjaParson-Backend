@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProjektAnjaParson_Backend.ApplicationDbContext;
 using ProjektAnjaParson_Backend.DataModels;
+using ProjektAnjaParson_Backend.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -10,6 +11,14 @@ namespace ProjektAnjaParson_Backend.Controllers
     [ApiController]
     public class SearchLocationController : ControllerBase
     {
+        private readonly AppDbContext _db;
+        public IEnumerable<SearchLocation> SearchLocations { get; set; }
+        public SearchLocation SearchLocation { get; set; }
+
+        public SearchLocationController(AppDbContext db)
+        {
+            _db = db;
+        }
         // GET: api/<SearchLocationController>
         [HttpGet]
         public IEnumerable<SearchLocation> Get()

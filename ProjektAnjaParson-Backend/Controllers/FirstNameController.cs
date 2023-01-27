@@ -14,17 +14,24 @@ namespace ProjektAnjaParson_Backend.Controllers
         public IEnumerable<FirstName> FirstNames { get; set; }
         public FirstName FirstName { get; set; }
 
+        public FirstNameController(AppDbContext db)
+        {
+            _db = db;
+        }
+
         //GET: api/<FirstNameController>
         [HttpGet]
         public IEnumerable<FirstName> Get()
         {
             FirstNames = _db.FirstNames;
+
             if(FirstNames == null)
             {
                 throw new NullReferenceException(
                 $"Could not get first names from database. Check if server is running."
                 );
             }
+
             Console.WriteLine("Retriving First Name's From DB");
 
             return FirstNames;

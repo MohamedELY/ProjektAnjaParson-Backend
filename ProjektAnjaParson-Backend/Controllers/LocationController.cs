@@ -6,7 +6,6 @@ using ProjektAnjaParson_Backend.Models;
 
 namespace ProjektAnjaParson_Backend.Controllers
 {
-    [BindProperties]
     [Route("api/[controller]")]
     [ApiController]
     public class LocationController : ControllerBase

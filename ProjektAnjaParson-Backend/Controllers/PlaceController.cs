@@ -10,6 +10,14 @@ namespace ProjektAnjaParson_Backend.Controllers
     [ApiController]
     public class PlaceController : ControllerBase
     {
+        private readonly AppDbContext _db;
+        public IEnumerable<Place> Places { get; set; }
+        public Place Place { get; set; }
+
+        public PlaceController(AppDbContext db)
+        {
+            _db = db;
+        }
         // GET: api/<PlaceController>
         [HttpGet]
         public IEnumerable<Place> Get()

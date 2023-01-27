@@ -14,16 +14,21 @@ namespace ProjektAnjaParson_Backend.Controllers
     public class FullNameController : ControllerBase
     {
         private readonly AppDbContext _db;
-        public IEnumerable<FullName> FullName { get; set; }
-        public FirstName FirstName { get; set; }
+        public IEnumerable<FullName> FullNames { get; set; }
+        public FullName FullName { get; set; }
+
+        public FullNameController(AppDbContext db)
+        {
+            _db = db;
+        }
+
         //GET: api/<FullNameController>
         [HttpGet]
         public List<CFullName> Get()
         {
             try
             {
-                var query =
-                    (from flname in _db.FullNames
+                var query = (from flname in _db.FullNames
                      join fname in _db.FirstNames on flname.FirstNameId equals fname.Id
                      join lname in _db.LastNames on flname.LastNameId equals lname.Id
                      select new CFullName
