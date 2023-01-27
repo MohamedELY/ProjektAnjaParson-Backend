@@ -5,7 +5,7 @@ using ProjektAnjaParson_Backend.Models;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 
-namespace ProjektAnjaParson_Backend.Crontollers
+namespace ProjektAnjaParson_Backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -25,7 +25,7 @@ namespace ProjektAnjaParson_Backend.Crontollers
         public IEnumerable<Category> Get()
         {
             Categories = _db.Categories;
-
+            
             if (Categories == null)
             {
                 throw new NullReferenceException(

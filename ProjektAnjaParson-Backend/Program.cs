@@ -22,7 +22,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddLogging();
 // Allows for one instance per connection.
-builder.Services.AddScoped<GlobalExceptionHandlingMiddleware>();
+builder.Services.AddTransient<GlobalExceptionHandlingMiddleware>();
 
 
 

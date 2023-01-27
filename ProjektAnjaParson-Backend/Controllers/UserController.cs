@@ -7,7 +7,6 @@ using ProjektAnjaParson_Backend.ApplicationDbContext;
 
 namespace ProjektAnjaParson_Backend.Controllers
 {
-
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase

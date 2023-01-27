@@ -22,12 +22,9 @@ namespace ProjektAnjaParson_Backend.Controllers
         [HttpGet]
         public IEnumerable<Place> Get()
         {
-            var data = new List<Place>();
-            using (var db = new AppDbContext())
-            {
-                data = db.Places.ToList();
-            }
-            return data;
+            Places = _db.Places;
+
+            return Places;
         }
 
         // GET api/<PlaceController>/5
