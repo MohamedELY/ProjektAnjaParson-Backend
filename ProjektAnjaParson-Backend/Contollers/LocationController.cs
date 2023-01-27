@@ -40,9 +40,13 @@ namespace ProjektAnjaParson_Backend.Contollers
         {
             using (var db = new ApdatabaseContext())
             {
-                var data = db.Locations;
-                data.Add(new Location() { Name = name, CountryId = countryId });
-                db.SaveChanges();
+                var exist = db.Locations.SingleOrDefault(c => c.Name.ToLower() == name.ToLower());
+                if (exist == null)
+                {
+                    var data = db.Locations;
+                    data.Add(new Location() { Name = name, CountryId = countryId });
+                    db.SaveChanges();
+                }
             }
         }
 

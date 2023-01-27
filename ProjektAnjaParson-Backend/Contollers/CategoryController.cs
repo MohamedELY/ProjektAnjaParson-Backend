@@ -36,6 +36,18 @@ namespace ProjektAnjaParson_Backend.Contollers
             return data;
         }
 
+        [HttpGet("{Name}")]
+        public Category Get(string cName)
+        {
+            var data = new Category();
+            using (var db = new AppDbContext.ApdatabaseContext())
+            {
+                data = db.Categories.SingleOrDefault(c => c.Name == cName); ;
+            }
+            Console.WriteLine("Retriving Country From DB");
+            return data;
+        }
+
         // POST api/<CategoryController>
         [HttpPost]
         public void Post(string name, string icon)

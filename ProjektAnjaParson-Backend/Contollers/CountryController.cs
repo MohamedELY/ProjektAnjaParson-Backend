@@ -35,15 +35,32 @@ namespace ProjektAnjaParson_Backend.Contollers
             return data;
         }
 
+
+        [HttpGet("{countryName}")]
+        public Country Get(string cName)
+        {
+            var data = new Country();
+            using (var db = new AppDbContext.ApdatabaseContext())
+            {
+                data = db.Countries.SingleOrDefault(c => c.Name == cName); ;
+            }
+            Console.WriteLine("Retriving Country From DB");
+            return data;
+        }
+
         // POST api/<CountryController>
         [HttpPost]
         public void Post([FromBody] string name)
         {
             using (var db = new ApdatabaseContext())
             {
-                var data = db.Countries;
-                data.Add(new Country() { Name = name });
-                db.SaveChanges();
+                var exist = db.Countries.SingleOrDefault(c => c.Name.ToLower() == name.ToLower());
+                if (exist == null)
+                {
+                    var data = db.Countries;
+                    data.Add(new Country() { Name = name });
+                    db.SaveChanges();
+                }
             }
         }
 

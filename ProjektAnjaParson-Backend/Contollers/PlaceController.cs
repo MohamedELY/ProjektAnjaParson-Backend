@@ -61,12 +61,30 @@ namespace ProjektAnjaParson_Backend.Contollers
 
         // POST api/<PlaceController>
         [HttpPost]
-        public void Post(string name, int locationId, string adress, int categoryId)
+        public void Post([FromBody] CPlace place)
         {
+            /*using (var db = new AppDbContext.ApdatabaseContext())
+            {
+                var data = db.Places;
+                data.Add(new Place() {});
+                db.SaveChanges();
+            }*/
+
             using (var db = new AppDbContext.ApdatabaseContext())
             {
                 var data = db.Places;
-                data.Add(new Place() { Name = name, LocationId = locationId, Address = adress, CategoryId = categoryId });
+                var locationID = CPlace.CreataLocation(place.Location, place.Country);
+                var categoryID = CPlace.GetCategoryID(place.Category);
+                
+
+                data.Add(new Place()
+                {
+                    Name = place.Name,
+                    LocationId = locationID,
+                    Address = place.Address,
+                    CategoryId = categoryID,
+                    Pic = place.Pic,
+                });
                 db.SaveChanges();
             }
         }
