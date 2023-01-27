@@ -32,6 +32,7 @@ namespace ProjektAnjaParson_Backend.Controllers
                          FirstName = fname.FirstName1,
                          LastName = lname.LastName1
                      }).ToList();
+
                 Console.WriteLine("Retriving Full Name's From DB");
                 return query;
             }
