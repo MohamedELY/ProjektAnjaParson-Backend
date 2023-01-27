@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProjektAnjaParson_Backend.DataModels;
 using ProjektAnjaParson_Backend.Models;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -11,27 +13,51 @@ namespace ProjektAnjaParson_Backend.Contollers
     {
         // GET: api/<PlaceController>
         [HttpGet]
-        public IEnumerable<Place> Get()
+        public IEnumerable<CPlace> Get()
         {
-            var data = new List<Place>();
             using (var db = new AppDbContext.ApdatabaseContext())
             {
-                data = db.Places.ToList();
+                var query = (from p in db.Places
+                             join l in db.Locations on p.LocationId equals l.Id
+                             join c in db.Countries on l.CountryId equals c.Id
+                             join cat in db.Categories on p.CategoryId equals cat.Id
+                             select new CPlace
+                             {
+                                 Id = p.Id,
+                                 Name = p.Name,
+                                 Location = l.Name,
+                                 Address = p.Address,
+                                 Category = cat.Name,
+                                 Pic = p.Pic
+                             }).ToList();
+                return query;
             }
-            return data;
         }
 
         // GET api/<PlaceController>/5
         [HttpGet("{id}")]
-        public Place Get(int id)
+        public CPlace Get(int id)
         {
-            var data = new Place();
             using (var db = new AppDbContext.ApdatabaseContext())
             {
-                data = db.Places.SingleOrDefault(c => c.Id == id);
+                var query = (from p in db.Places
+                             join l in db.Locations on p.LocationId equals l.Id
+                             join c in db.Countries on l.CountryId equals c.Id
+                             join cat in db.Categories on p.CategoryId equals cat.Id
+                             where p.Id == id
+                             select new CPlace
+                             {
+                                 Id = p.Id,
+                                 Name = p.Name,
+                                 Location = l.Name,
+                                 Address = p.Address,
+                                 Category = cat.Name,
+                                 Pic = p.Pic
+                             }).First();
+                return query;
             }
-            return data;
         }
+    
 
         // POST api/<PlaceController>
         [HttpPost]
