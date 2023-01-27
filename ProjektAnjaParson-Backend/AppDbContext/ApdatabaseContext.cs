@@ -121,6 +121,8 @@ public partial class ApdatabaseContext : DbContext
             entity.HasOne(d => d.Location).WithMany(p => p.Places)
                 .HasForeignKey(d => d.LocationId)
                 .HasConstraintName("FK_Place.LocationId");
+
+            entity.Property(e => e.Pic).HasMaxLength(750);
         });
 
         modelBuilder.Entity<Post>(entity =>
