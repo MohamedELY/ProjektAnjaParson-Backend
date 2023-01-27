@@ -3,6 +3,7 @@ using ProjektAnjaParson_Backend.Models;
 using ProjektAnjaParson_Backend.ApplicationDbContext;
 using ProjektAnjaParson_Backend.DataModels;
 using System.Linq;
+using System.Linq.Expressions;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -12,24 +13,31 @@ namespace ProjektAnjaParson_Backend.Controllers
     [ApiController]
     public class FullNameController : ControllerBase
     {
+        private readonly AppDbContext _db;
+        public IEnumerable<FullName> FullName { get; set; }
+        public FirstName FirstName { get; set; }
         //GET: api/<FullNameController>
         [HttpGet]
         public List<CFullName> Get()
         {
-
-            using (var db = new AppDbContext())
+            try
             {
-                var query = (from flname in db.FullNames
-                             join fname in db.FirstNames on flname.FirstNameId equals fname.Id
-                             join lname in db.LastNames on flname.LastNameId equals lname.Id
-                             select new CFullName
-                             {
-                                 Id = flname.Id,
-                                 FirstName = fname.FirstName1,
-                                 LastName = lname.LastName1
-                             }).ToList();
+                var query =
+                    (from flname in _db.FullNames
+                     join fname in _db.FirstNames on flname.FirstNameId equals fname.Id
+                     join lname in _db.LastNames on flname.LastNameId equals lname.Id
+                     select new CFullName
+                     {
+                         Id = flname.Id,
+                         FirstName = fname.FirstName1,
+                         LastName = lname.LastName1
+                     }).ToList();
                 Console.WriteLine("Retriving Full Name's From DB");
                 return query;
+            }
+            catch(Exception ex)
+            {
+                throw new NullReferenceException("Could not get full names from database. Check if database is running.");
             }
         }
 

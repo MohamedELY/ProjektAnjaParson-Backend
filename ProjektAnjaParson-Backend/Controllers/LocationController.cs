@@ -6,6 +6,7 @@ using ProjektAnjaParson_Backend.Models;
 
 namespace ProjektAnjaParson_Backend.Controllers
 {
+    [BindProperties]
     [Route("api/[controller]")]
     [ApiController]
     public class LocationController : ControllerBase
@@ -18,12 +19,13 @@ namespace ProjektAnjaParson_Backend.Controllers
         {
             _db = db;
         }
-        // GET: api/<LocationController>
+
+        // GET api/<LocationController>
         [HttpGet]
         public IEnumerable<Location> Get()
         {
             Locations = _db.Locations;
-                
+
             return Locations;
         }
 
@@ -32,19 +34,20 @@ namespace ProjektAnjaParson_Backend.Controllers
         public Location Get(int id)
         {
             Location = _db.Locations.Find(id);
+
             if(Location == null)
             {
                 throw new NullReferenceException(
                 @$"Object of type {typeof(Location)} could not be found. 
                 Check if location with id {id} exists in database."
-                );  
+                );
             }
             return Location;
         }
 
         // POST api/<LocationController>
         [HttpPost]
-        public void Post(string name, int countryId)
+        public void Post([FromBody] string name, int countryId)
         {
             using (var db = new AppDbContext())
             {

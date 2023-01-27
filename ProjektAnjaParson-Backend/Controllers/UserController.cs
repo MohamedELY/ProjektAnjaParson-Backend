@@ -7,91 +7,93 @@ using ProjektAnjaParson_Backend.ApplicationDbContext;
 
 namespace ProjektAnjaParson_Backend.Controllers
 {
+
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
+        private readonly AppDbContext _db;
+        public IEnumerable<Category> Categories { get; set; }
+        public Category Category { get; set; }
+
+        public UserController(AppDbContext db)
+        {
+            _db = db;
+        }
+
         // GET: api/<UserController>
         [HttpGet]
-        public List<CUser> Get()
-        {     
-            using (var db = new AppDbContext())
-            {
-                var query = (from u in db.Users
-                             join flname in db.FullNames on u.FullNameId equals flname.Id
-                             join fname in db.FirstNames on flname.FirstNameId equals fname.Id
-                             join lname in db.LastNames on flname.LastNameId equals lname.Id
-                             select new CUser
-                             {
-                                 Id = u.Id,
-                                 Firstname = fname.FirstName1,
-                                 Lastname = lname.LastName1,
-                                 Username = u.Username,
-                                 Password = u.Password
-                             }).ToList();
-                return query;
-            }
-            
+        public IEnumerable<CUser> Get()
+        {
+            IEnumerable<CUser> getUsers =
+                (
+                from u in _db.Users
+                join flname in _db.FullNames on u.FullNameId equals flname.Id
+                join fname in _db.FirstNames on flname.FirstNameId equals fname.Id
+                join lname in _db.LastNames on flname.LastNameId equals lname.Id
+                select new CUser
+                {
+                    Id = u.Id,
+                    Firstname = fname.FirstName1,
+                    Lastname = lname.LastName1,
+                    Username = u.Username,
+                    Password = u.Password
+                }).ToList();
+
+            return getUsers;
         }
 
         // GET api/<UserController>/5
         [HttpGet("{id}")]
         public CUser Get(int id)
         {
-            using (var db = new AppDbContext())
-            {
-                var query = (from u in db.Users
-                            join flname in db.FullNames on u.FullNameId equals flname.Id
-                            join fname in db.FirstNames on flname.FirstNameId equals fname.Id
-                            join lname in db.LastNames on flname.LastNameId equals lname.Id
-                            where u.Id == id
-                            select new CUser
-                            {
-                                Id = u.Id,
-                                Firstname = fname.FirstName1,
-                                Lastname = lname.LastName1,
-                                Username = u.Username,
-                                Password = u.Password
-                            }).First();
-            return query;
-            }
+            CUser getUser =
+                (
+                from u in _db.Users
+                join flname in _db.FullNames on u.FullNameId equals flname.Id
+                join fname in _db.FirstNames on flname.FirstNameId equals fname.Id
+                join lname in _db.LastNames on flname.LastNameId equals lname.Id
+                where u.Id == id
+                select new CUser
+                {
+                    Id = u.Id,
+                    Firstname = fname.FirstName1,
+                    Lastname = lname.LastName1,
+                    Username = u.Username,
+                    Password = u.Password
+                }).First();
+            return getUser;
 
         }
 
         // POST api/<UserController>
         [HttpPost]
-        public void Post(int fullNameId, string username, string password)
+        public void Post([FromBody] int fullNameId, string username, string password)
         {
-            using (var db = new AppDbContext())
-            {
-                var data = db.Users;
+            var data = _db.Users;
 
-                data.Add(new User()
-                {
-                    FullNameId = fullNameId,
-                    Username = username,
-                    Password = password,
-                });
-                db.SaveChanges();
-            }
+            data.Add(new User()
+            {
+                FullNameId = fullNameId,
+                Username = username,
+                Password = password,
+            });
+            _db.SaveChanges();
+       
         }
 
         // PUT api/<UserController>/5
         [HttpPut("{id}")]
-        public void Put(int id, int fullNameId, string password)
+        public void Put([FromBody] int id, int fullNameId, string password)
         {
-            using (var db = new AppDbContext())
+            
+            var data = _db.Users;
+            var selected = data.SingleOrDefault(c => c.Id == id);
+            if (selected != null)
             {
-                
-                var data = db.Users;
-
-                var selected = data.SingleOrDefault(c => c.Id == id);
-                if (selected != null)
-                {
-                    selected.FullNameId = fullNameId;
-                    selected.Password = password;
-                    db.SaveChanges();
-                }
+                selected.FullNameId = fullNameId;
+                selected.Password = password;
+                _db.SaveChanges();
             }
         }
 

@@ -25,12 +25,14 @@ namespace ProjektAnjaParson_Backend.Crontollers
         public IEnumerable<Category> Get()
         {
             Categories = _db.Categories;
+
             if (Categories == null)
             {
                 throw new NullReferenceException(
                 $"Could not get categories from database. Check if server is running."
                 );
             }
+
             return Categories;
         }
 
@@ -39,6 +41,7 @@ namespace ProjektAnjaParson_Backend.Crontollers
         public Category Get(int id)
         {
             Category = _db.Categories.Find(id);
+
             if (Category == null)
             {
                 throw new NullReferenceException(
@@ -51,9 +54,10 @@ namespace ProjektAnjaParson_Backend.Crontollers
         }
         // POST api/<CategoryController>
         [HttpPost]
-        public void Post(string? name, string icon)
+        public void Post([FromBody]string? name, string icon)
         {
             var categoryCompare = _db.Categories.SingleOrDefault(c => c.Name == name);
+
             if (categoryCompare == null)
             {
                 Category = new Category() { Name = name, Icon = icon };

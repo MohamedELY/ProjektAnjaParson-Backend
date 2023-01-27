@@ -10,61 +10,66 @@ namespace ProjektAnjaParson_Backend.Controllers
     [ApiController]
     public class FirstNameController : ControllerBase
     {
+        private readonly AppDbContext _db;
+        public IEnumerable<FirstName> FirstNames { get; set; }
+        public FirstName FirstName { get; set; }
+
         //GET: api/<FirstNameController>
         [HttpGet]
         public IEnumerable<FirstName> Get()
         {
-            var data = new List<FirstName>();
-            using (var db = new AppDbContext())
+            FirstNames = _db.FirstNames;
+            if(FirstNames == null)
             {
-                data = db.FirstNames.ToList();
+                throw new NullReferenceException(
+                $"Could not get first names from database. Check if server is running."
+                );
             }
             Console.WriteLine("Retriving First Name's From DB");
-            return data;
+
+            return FirstNames;
         }
 
         // GET api/<FirstNameController>/5
         [HttpGet("{id}")]
         public FirstName Get(int id)
         {
-            var data = new FirstName();
-            using (var db = new AppDbContext())
-            {
-                data = db.FirstNames.SingleOrDefault(c => c.Id == id); ;
-            }
+            FirstName = _db.FirstNames.Find(id);
+
             Console.WriteLine("Retriving First Name From DB");
-            return data;
+            
+            return FirstName;
         }
 
         //GET api/<FirstNameController>/5
         [HttpGet("{fname}")]
         public FirstName Get(string fname)
         {
-            var data = new FirstName();
-            using (var db = new AppDbContext())
-            {
-                data = db.FirstNames.SingleOrDefault(c => c.FirstName1 == fname); ;
-            }
+            FirstName = _db.FirstNames.SingleOrDefault(f => f.FirstName1.ToLower() == fname.ToLower());
+
             Console.WriteLine("Retriving First Name From DB");
-            return data;
+            
+            return FirstName;
         }
 
         // POST api/<FirstNameController>
         [HttpPost]
-        public void Post(string firstName)
+        public void Post([FromBody] string firstName)
         {
-            using (var db = new AppDbContext())
+            
+            var exist = _db.FirstNames.SingleOrDefault(c => c.FirstName1.ToLower() == firstName.ToLower());
+            if (exist == null)
             {
-                var exist = db.FirstNames.SingleOrDefault(c => c.FirstName1.ToLower() == firstName.ToLower());
-                if (exist == null)
-                {
-                    var data = db.FirstNames;
-                    data.Add(new FirstName() { FirstName1 = firstName });
+                var data = _db.FirstNames;
+                data.Add(new FirstName() { FirstName1 = firstName });
 
-                    db.SaveChanges();
-                }
+                _db.SaveChanges();
+                Console.WriteLine("First Name Has been Saved to DB");
             }
-            Console.WriteLine("First Name Has been Saved to DB");
+            else
+            {
+                throw new NullReferenceException("First name already exists. Check database.");
+            }
         }
 
         // DELETE api/<FirstNameController>/5
