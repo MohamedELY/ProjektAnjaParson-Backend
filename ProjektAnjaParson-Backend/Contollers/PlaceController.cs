@@ -28,6 +28,7 @@ namespace ProjektAnjaParson_Backend.Contollers
                                  Location = l.Name,
                                  Address = p.Address,
                                  Category = cat.Name,
+                                 Country = c.Name,
                                  Pic = p.Pic
                              }).ToList();
                 return query;
@@ -52,6 +53,7 @@ namespace ProjektAnjaParson_Backend.Contollers
                                  Location = l.Name,
                                  Address = p.Address,
                                  Category = cat.Name,
+                                 Country = c.Name,
                                  Pic = p.Pic
                              }).First();
                 return query;

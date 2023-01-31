@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProjektAnjaParson_Backend.DataModels;
 using ProjektAnjaParson_Backend.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -11,28 +12,49 @@ namespace ProjektAnjaParson_Backend.Contollers
     {
         // GET: api/PostController
         [HttpGet]
-        public IEnumerable<Post> Get()
+        public IEnumerable<CPost> Get()
         {
-            var data = new List<Post>();
             using (var db = new AppDbContext.ApdatabaseContext())
             {
-                data = db.Posts.ToList();
+                var query = (from p in db.Posts
+                             join u in db.Users on p.UserId equals u.Id
+                             select new CPost
+                             {
+                                 Id = p.Id,
+                                 PlaceId = p.PlaceId,
+                                 Title = p.Title,
+                                 Description = p.Description,
+                                 UserId = p.UserId,
+                                 Username = u.Username,
+                                 Rating = p.Rating
+                             }).ToList();
+                return query;
             }
             Console.WriteLine("Retriving Post's From DB");
-            return data;
         }
 
         // GET api/PostController/5
         [HttpGet("{id}")]
-        public Post Get(int id)
+        public CPost Get(int id)
         {
-            var data = new Post();
             using (var db = new AppDbContext.ApdatabaseContext())
             {
-                data = db.Posts.SingleOrDefault(c => c.Id == id);
+                var query = (from p in db.Posts
+                             join u in db.Users on p.UserId equals u.Id
+                             where id == p.Id
+                             select new CPost
+                             {
+                                 Id = p.Id,
+                                 PlaceId = p.PlaceId,
+                                 Title = p.Title,
+                                 Description = p.Description,
+                                 UserId = p.UserId,
+                                 Username = u.Username,
+                                 Rating = p.Rating
+                             }).First();
+                return query;
             }
             Console.WriteLine("Retriving Post From DB");
-            return data;
         }
 
         // POST api/PostController
@@ -76,7 +98,7 @@ namespace ProjektAnjaParson_Backend.Contollers
         {
             using (var db = new AppDbContext.ApdatabaseContext())
             {
-                var data = db.Posts.SingleOrDefault(c => c.Id == c.Id);
+                var data = db.Posts.SingleOrDefault(c => c.Id == id);
                 if (data != null)
                 {
                     db.Posts.Remove(data);
