@@ -35,13 +35,13 @@ namespace ProjektAnjaParson_Backend.Contollers
 
         // GET api/PostController/5
         [HttpGet("{id}")]
-        public CPost Get(int id)
+        public IEnumerable<CPost> Get(int id)
         {
             using (var db = new AppDbContext.ApdatabaseContext())
             {
                 var query = (from p in db.Posts
                              join u in db.Users on p.UserId equals u.Id
-                             where id == p.Id
+                             where id == p.PlaceId
                              select new CPost
                              {
                                  Id = p.Id,
@@ -51,7 +51,7 @@ namespace ProjektAnjaParson_Backend.Contollers
                                  UserId = p.UserId,
                                  Username = u.Username,
                                  Rating = p.Rating
-                             }).First();
+                             }).ToList();
                 return query;
             }
             Console.WriteLine("Retriving Post From DB");
