@@ -71,7 +71,7 @@ namespace ProjektAnjaParson_Backend.Contollers
                 {
                     FullNameId = fullNameID,
                     Username = user.Username,
-                    Password = user.Password,
+                    Password = Security.Hash.Execute(user.Password),
                 });
                 db.SaveChanges();
             }

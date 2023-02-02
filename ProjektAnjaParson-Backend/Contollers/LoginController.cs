@@ -15,13 +15,13 @@ namespace ProjektAnjaParson_Backend.Contollers
         {
             List<CUser> users = new List<CUser>();
             UserController caller = new UserController();
-
+            string hPassword = Security.Hash.Execute(password);
 
             users = caller.Get();
 
             foreach (var user in users)
             {
-                if(user.Username == username && user.Password == password )
+                if(user.Username == username && user.Password == hPassword )
                     return user;
             }
             return new CUser();
