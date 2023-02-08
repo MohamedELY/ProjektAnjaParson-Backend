@@ -41,7 +41,7 @@ namespace ProjektAnjaParson_Backend.Contollers
             var data = new LastName();
             using (var db = new AppDbContext.ApdatabaseContext())
             {
-                data = db.LastNames.SingleOrDefault(c => c.LastName1 == lname); ;
+                data = db.LastNames.SingleOrDefault(c => c.LastName1 == lname);
             }
             Console.WriteLine("Retriving Last Name From DB");
             return data;
