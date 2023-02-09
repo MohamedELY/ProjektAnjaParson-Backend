@@ -59,12 +59,20 @@ namespace ProjektAnjaParson_Backend.Contollers
 
         // POST api/PostController
         [HttpPost]
-        public void Post(int placeId, string title, string description, int userId, bool rating)
+        public void Post([FromBody] CNewPost post)
         {
             using (var db = new AppDbContext.ApdatabaseContext())
             {
                 var data = db.Posts;
-                data.Add(new Post() { PlaceId = placeId, Title = title, Description = description, UserId = userId, Rating = rating });
+                data.Add(new Post()
+                {
+                    Id = post.Id,
+                    PlaceId = post.PlaceId,
+                    Title = post.Title,
+                    Description = post.Description,
+                    UserId = post.UserId,
+                    Rating= post.Rating
+                });
                 db.SaveChanges();
             }
             Console.WriteLine("Post Has been Saved to DB");
