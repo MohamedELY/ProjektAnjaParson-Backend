@@ -103,13 +103,34 @@ namespace ProjektAnjaParson_Backend.Contollers
                                      {
                                          Id = p.Id,
                                          Name = p.Name,
-                                         Rating = new List<bool?>() { po.Rating },
+                                         Rating = po.Rating
+
                                      }).ToList();
+
+            var dislike = query.Where(x => x.Id.Equals(1)).Where(x => x.Rating.Equals(false)).Count();
+            var like = query.Where(x => x.Id.Equals(1)).Where(x => x.Rating.Equals(true)).Count();
 
             foreach(var item in query)
             {
-                Console.WriteLine(item);
+                item.Dislike = query.Where(x => x.Id.Equals(item.Id)).Where(x => x.Rating.Equals(false)).Count();
+                item.Like = query.Where(x => x.Id.Equals(item.Id)).Where(x => x.Rating.Equals(true)).Count();
             }
+
+            var newList = query.Distinct().ToList();
+
+
+            Console.WriteLine(dislike);
+
+            // var query1 = query.GroupBy(c => c.Name);
+
+/*            Id = p.Id,
+                                         Name = p.Name,
+                                         Rating = new List<bool?>() { po.Rating },*/
+
+            /*foreach(var item in query)
+            {
+                Console.WriteLine(item);
+            }*/
 
             // If searchbar is NOT null or whitespace, show items that contain the searched value
             /*if (!string.IsNullOrWhiteSpace(searchInput))
@@ -132,7 +153,7 @@ namespace ProjektAnjaParson_Backend.Contollers
                 
             }*/
 
-            return query;
+            return newList;
         }
 
         // POST api/<SearchLocationController>
