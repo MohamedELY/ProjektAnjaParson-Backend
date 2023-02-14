@@ -90,7 +90,7 @@ namespace ProjektAnjaParson_Backend.Contollers
 
         // GET api/<SearchLocationController>/findLocation
         // [Route("")]
-        [HttpGet("api/rating")]
+        [HttpGet("rating")]
         public List<CSearch> GetRating()
         {
             // Combine tables into list
