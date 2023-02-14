@@ -37,6 +37,7 @@ namespace ProjektAnjaParson_Backend.Contollers
 
             if(data == null)
             {
+
                 return NotFound();
             }
 

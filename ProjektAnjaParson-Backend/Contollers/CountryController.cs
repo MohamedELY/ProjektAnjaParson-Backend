@@ -29,7 +29,7 @@ namespace ProjektAnjaParson_Backend.Contollers
                 return NotFound();
             }
 
-            _logger.Log(LogLevel.Information, "Retriving countries From DB");
+            _logger.Log(LogLevel.Information, "Retrieving countries from DB");
             return Ok(data);
         }
 
@@ -37,14 +37,16 @@ namespace ProjektAnjaParson_Backend.Contollers
         [HttpGet("{id}")]
         public ActionResult<Country> Get(int id)
         {
+
             var data = _db.Countries.Find(id);
 
             if (data == null)
             {
-                _logger.Log(LogLevel.Error, "Could not get countries from database.");
+                _logger.Log(LogLevel.Error, "Could not get country {data.Name} from database.", data.Name);
                 return NotFound();
             }
 
+            _logger.Log(LogLevel.Information, "Retrieving country {data.Name} from database.", data.Name);
             return Ok(data);
         }
 
@@ -56,6 +58,7 @@ namespace ProjektAnjaParson_Backend.Contollers
 
             if (data == null)
             {
+                _logger.Log(LogLevel.Error, "Could not get countries from database.");
                 return NotFound();
             }
 

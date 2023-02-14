@@ -10,6 +10,7 @@ namespace ProjektAnjaParson_Backend.Contollers
     [ApiController]
     public class LoginController : ControllerBase
     {
+
         private readonly ApdatabaseContext _db;
         private readonly ILogger _logger;
 
@@ -18,6 +19,7 @@ namespace ProjektAnjaParson_Backend.Contollers
             _db = db;
             _logger = logger;
         }
+
         // GET api/<LoginController>/5
         [HttpGet("{username}/{password}")]
         public CUser Get(string username, string password)
@@ -46,6 +48,20 @@ namespace ProjektAnjaParson_Backend.Contollers
                     return user;
             }
             return new CUser();
+        }
+
+        // GET api/<LoginController>/5
+        [HttpGet("{username}")]
+        public ActionResult<CUser> GetUserByUsername(string username)
+        {
+            var data = _db.Users.SingleOrDefault(c => c.Username == username);
+
+            if (data == null)
+            {
+                return NotFound(data);
+            }
+
+            return Ok(data);
         }
     }
 }
