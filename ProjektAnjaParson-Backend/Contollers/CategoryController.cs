@@ -31,7 +31,7 @@ namespace ProjektAnjaParson_Backend.Contollers
                 return NotFound();
             }
 
-            _logger.Log(LogLevel.Information, "Retriving categories From DB");
+            _logger.Log(LogLevel.Information, "Retrieving categories From DB");
 
             return Ok(data);
         }
@@ -44,15 +44,15 @@ namespace ProjektAnjaParson_Backend.Contollers
 
             if(data == null)
             {
-                return NotFound(id);
+                return NotFound();
             }
 
             _logger.Log(LogLevel.Information, "Retrieving category from DB");
 
             return Ok(data);
         }
-
-        [HttpGet("{Name}")]
+        [Route("api/categoryname")]
+        [HttpGet]
         public ActionResult<Category> Get(string cName)
         {
             var data = _db.Categories.SingleOrDefault(c => c.Name == cName);
@@ -60,11 +60,10 @@ namespace ProjektAnjaParson_Backend.Contollers
             if(data == null)
             {
                 _logger.Log(LogLevel.Error, "Could not find category {cName}", cName);
-                return NotFound(cName);
+                return NotFound();
             }
 
             _logger.Log(LogLevel.Information, "Retrieving category {cName} from DB", cName);
-            
             return Ok(data);
         }
 
@@ -141,7 +140,6 @@ namespace ProjektAnjaParson_Backend.Contollers
         [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {
-            
             var data = _db.Categories.Find(id);
             if (data != null)
             {

@@ -121,16 +121,6 @@ namespace ProjektAnjaParson_Backend.Contollers
 
             Console.WriteLine(dislike);
 
-            // var query1 = query.GroupBy(c => c.Name);
-
-/*            Id = p.Id,
-                                         Name = p.Name,
-                                         Rating = new List<bool?>() { po.Rating },*/
-
-            /*foreach(var item in query)
-            {
-                Console.WriteLine(item);
-            }*/
 
             // If searchbar is NOT null or whitespace, show items that contain the searched value
             /*if (!string.IsNullOrWhiteSpace(searchInput))

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using ProjektAnjaParson_Backend.AppDbContext;
 using ProjektAnjaParson_Backend.Models;
 
@@ -37,8 +38,12 @@ namespace ProjektAnjaParson_Backend.Contollers
         [HttpGet("{id}")]
         public ActionResult<Country> Get(int id)
         {
+            if(id < 1)
+            {
+                return BadRequest();
+            }
 
-            var data = _db.Countries.Find(id);
+            var data = _db.Countries.Find();
 
             if (data == null)
             {
@@ -54,6 +59,11 @@ namespace ProjektAnjaParson_Backend.Contollers
         [HttpGet("{countryName}")]
         public ActionResult<Country> Get(string cName)
         {
+            if(cName == null)
+            {
+                _logger.Log(LogLevel.Error, "Invalid argument {cName}.", cName);
+                return BadRequest();
+            }
             var data = _db.Countries.SingleOrDefault(c => c.Name == cName);
 
             if (data == null)
@@ -61,8 +71,7 @@ namespace ProjektAnjaParson_Backend.Contollers
                 _logger.Log(LogLevel.Error, "Could not get countries from database.");
                 return NotFound();
             }
-
-            Console.WriteLine("Retriving Country From DB");
+            _logger.Log(LogLevel.Information, "Retrieving country {cName} from database.", cName);
             return Ok(data);
         }
 
@@ -70,7 +79,11 @@ namespace ProjektAnjaParson_Backend.Contollers
         [HttpPost]
         public ActionResult Post([FromBody] string name)
         {
-            
+            if (string.IsNullOrEmpty(name))
+            {
+
+                return BadRequest();
+            }
             var exist = _db.Countries.SingleOrDefault(c => c.Name.ToLower() == name.ToLower());
             if (exist == null)
             {
