@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProjektAnjaParson_Backend.AppDbContext;
 using ProjektAnjaParson_Backend.DataModels;
 using ProjektAnjaParson_Backend.Models;
 
@@ -10,111 +11,125 @@ namespace ProjektAnjaParson_Backend.Contollers
     [ApiController]
     public class PostController : ControllerBase
     {
+        private readonly ApdatabaseContext _db;
+        private readonly ILogger _logger;
+        public PostController(ApdatabaseContext db, ILogger<PostController> logger)
+        {
+            _db = db;
+        }
         // GET: api/PostController
         [HttpGet]
         public IEnumerable<CPost> Get()
         {
-            using (var db = new AppDbContext.ApdatabaseContext())
-            {
-                var query = (from p in db.Posts
-                             join u in db.Users on p.UserId equals u.Id
-                             select new CPost
-                             {
-                                 Id = p.Id,
-                                 PlaceId = p.PlaceId,
-                                 Title = p.Title,
-                                 Description = p.Description,
-                                 UserId = p.UserId,
-                                 Username = u.Username,
-                                 Rating = p.Rating
-                             }).ToList();
-                return query;
-            }
+            
+            var query = (from p in _db.Posts
+                            join u in _db.Users on p.UserId equals u.Id
+                            select new CPost
+                            {
+                                Id = p.Id,
+                                PlaceId = p.PlaceId,
+                                Title = p.Title,
+                                Description = p.Description,
+                                UserId = p.UserId,
+                                Username = u.Username,
+                                Rating = p.Rating
+                            }).ToList();
+            
+            
             Console.WriteLine("Retriving Post's From DB");
+            return query;
         }
 
         // GET api/PostController/5
         [HttpGet("{id}")]
         public IEnumerable<CPost> Get(int id)
         {
-            using (var db = new AppDbContext.ApdatabaseContext())
-            {
-                var query = (from p in db.Posts
-                             join u in db.Users on p.UserId equals u.Id
-                             where id == p.PlaceId
-                             select new CPost
-                             {
-                                 Id = p.Id,
-                                 PlaceId = p.PlaceId,
-                                 Title = p.Title,
-                                 Description = p.Description,
-                                 UserId = p.UserId,
-                                 Username = u.Username,
-                                 Rating = p.Rating
-                             }).ToList();
-                return query;
-            }
+            
+            var query = (from p in _db.Posts
+                            join u in _db.Users on p.UserId equals u.Id
+                            where id == p.PlaceId
+                            select new CPost
+                            {
+                                Id = p.Id,
+                                PlaceId = p.PlaceId,
+                                Title = p.Title,
+                                Description = p.Description,
+                                UserId = p.UserId,
+                                Username = u.Username,
+                                Rating = p.Rating
+                            }).ToList();
+
             Console.WriteLine("Retriving Post From DB");
+            return query;
+            
+            
         }
+
+
 
         // POST api/PostController
         [HttpPost]
-        public void Post([FromBody] CNewPost post)
+        public ActionResult Post([FromBody] CNewPost post)
         {
-            using (var db = new AppDbContext.ApdatabaseContext())
+            if (post != null)
             {
-                var data = db.Posts;
-                data.Add(new Post()
+                _db.Posts.Add(new Post()
                 {
                     Id = post.Id,
                     PlaceId = post.PlaceId,
                     Title = post.Title,
                     Description = post.Description,
                     UserId = post.UserId,
-                    Rating= post.Rating
+                    Rating = post.Rating
                 });
-                db.SaveChanges();
             }
-            Console.WriteLine("Post Has been Saved to DB");
+            else
+            {
+                _logger.Log(LogLevel.Error, "Could not save post, must enter something.");
+                return BadRequest();
+            }
+
+            _logger.Log(LogLevel.Information, "Post has been saved to DB.");
+            _db.SaveChanges();
+            return Ok();
         }
 
         // PUT api/PostController/5
         [HttpPut("{id}")]
-        public void Put(int id, int? placeId, string? title, string? description, int? userId, bool? rating)
+        public ActionResult Put(int id, int? placeId, string? title, string? description, int? userId, bool? rating)
         {
-            using (var db = new AppDbContext.ApdatabaseContext())
+
+            var selected = _db.Posts.Find(id);
+            if (selected != null)
             {
-                var data = db.Posts;
+                selected.PlaceId = placeId ??= selected.PlaceId;
+                selected.Title = title ??= selected.Title;
+                selected.Description = description ??= selected.Description;
+                selected.UserId = userId ??= selected.UserId;
+                selected.Rating = rating ??= selected.Rating;
+                _db.SaveChanges();
 
-                var selected = data.SingleOrDefault(c => c.Id == id);
-                if (selected != null)
-                {
-
-                    selected.PlaceId = placeId ??= selected.PlaceId;
-                    selected.Title = title ??= selected.Title;
-                    selected.Description = description ??= selected.Description;
-                    selected.UserId = userId ??= selected.UserId;
-                    selected.Rating = rating ??= selected.Rating;
-                    db.SaveChanges();
-                }
+                return Ok();
             }
+
+            return NotFound();
         }
 
         // DELETE api/PostController/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public ActionResult Delete(int id)
         {
-            using (var db = new AppDbContext.ApdatabaseContext())
+            var data = _db.Posts.Find(id);
+            if (data != null)
             {
-                var data = db.Posts.SingleOrDefault(c => c.Id == id);
-                if (data != null)
-                {
-                    db.Posts.Remove(data);
+                _db.Posts.Remove(data);
+                _db.SaveChanges();
+                Console.WriteLine("Post Has been Deleted from DB");
 
-                    db.SaveChanges();
-                }
+                return Ok(data);
             }
-            Console.WriteLine("Post Has been Deleted from DB");
+
+            return BadRequest();
         }
     }
 }

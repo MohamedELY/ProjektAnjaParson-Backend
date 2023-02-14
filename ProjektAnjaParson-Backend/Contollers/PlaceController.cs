@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProjektAnjaParson_Backend.AppDbContext;
 using ProjektAnjaParson_Backend.DataModels;
 using ProjektAnjaParson_Backend.Models;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
@@ -11,28 +12,34 @@ namespace ProjektAnjaParson_Backend.Contollers
     [ApiController]
     public class PlaceController : ControllerBase
     {
+        private readonly ApdatabaseContext _db;
+        private readonly ILogger _logger;
+        public PlaceController(ApdatabaseContext db, ILogger<PlaceController> logger)
+        {
+            _db = db;
+        }
         // GET: api/<PlaceController>
         [HttpGet]
         public IEnumerable<CPlace> Get()
         {
-            using (var db = new AppDbContext.ApdatabaseContext())
-            {
-                var query = (from p in db.Places
-                             join l in db.Locations on p.LocationId equals l.Id
-                             join c in db.Countries on l.CountryId equals c.Id
-                             join cat in db.Categories on p.CategoryId equals cat.Id
-                             select new CPlace
-                             {
-                                 Id = p.Id,
-                                 Name = p.Name,
-                                 Location = l.Name,
-                                 Address = p.Address,
-                                 Category = cat.Name,
-                                 Country = c.Name,
-                                 Pic = p.Pic
-                             }).ToList();
-                return query;
-            }
+            
+            var query = (from p in _db.Places
+                            join l in _db.Locations on p.LocationId equals l.Id
+                            join c in _db.Countries on l.CountryId equals c.Id
+                            join cat in _db.Categories on p.CategoryId equals cat.Id
+                            select new CPlace
+                            {
+                                Id = p.Id,
+                                Name = p.Name,
+                                Location = l.Name,
+                                Address = p.Address,
+                                Category = cat.Name,
+                                Country = c.Name,
+                                Pic = p.Pic
+                            }).ToList();
+
+            return query;
+            
         }
 
         // GET api/<PlaceController>/5

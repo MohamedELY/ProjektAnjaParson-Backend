@@ -65,12 +65,24 @@ namespace ProjektAnjaParson_Backend.DataModels
 
         public static int GetCategoryID(string category)
         {
-            var categoryController = new CategoryController();
+            /*var categoryController = new CategoryController();
             var cat = categoryController.Get(category);
 
-            return cat.Id;
-        }
+            return cat.Id;*/
 
-        
+            using (var db = new AppDbContext.ApdatabaseContext())
+            {
+
+                var data = db.Categories.SingleOrDefault(c => c.Name == category);
+                if (data == null)
+                {
+                    Console.WriteLine("Could not find category {category}.", category);
+                }
+
+                Console.WriteLine("Retriving Country From DB");
+
+                return data.Id;
+            }
+        }
     }
 }

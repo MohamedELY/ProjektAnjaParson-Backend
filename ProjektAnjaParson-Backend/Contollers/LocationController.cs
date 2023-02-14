@@ -10,28 +10,38 @@ namespace ProjektAnjaParson_Backend.Contollers
     [ApiController]
     public class LocationController : ControllerBase
     {
+        private readonly ApdatabaseContext _db;
+        private readonly ILogger _logger;
+        public LocationController(ApdatabaseContext db, ILogger<LocationController> logger)
+        {
+            _db = db;
+        }
         // GET: api/<LocationController>
         [HttpGet]
-        public IEnumerable<Location> Get()
+        public ActionResult<IEnumerable<Location>> Get()
         {
-            var data = new List<Location>();
-            using (var db = new ApdatabaseContext())
+            
+            List<Location>? data = _db.Locations.ToList();
+            if(data == null)
             {
-                data = db.Locations.ToList();
+                return NotFound();
             }
-            return data;
+           
+            return Ok(data);
         }
 
         // GET api/<LocationController>/5
         [HttpGet("{id}")]
-        public Location Get(int id)
+        public ActionResult<Location> Get(int id)
         {
-            var data = new Location();
-            using (var db = new ApdatabaseContext())
+            Location data = _db.Locations.SingleOrDefault(c => c.Id == id);
+
+            if(data == null)
             {
-                data = db.Locations.SingleOrDefault(c => c.Id == id);
+                return NotFound();
             }
-            return data;
+
+            return Ok(data);
         }
 
         // POST api/<LocationController>

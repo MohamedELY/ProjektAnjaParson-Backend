@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProjektAnjaParson_Backend.AppDbContext;
 using ProjektAnjaParson_Backend.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -9,30 +10,39 @@ namespace ProjektAnjaParson_Backend.Contollers
     [ApiController]
     public class LastNameController : ControllerBase
     {
+        private readonly ApdatabaseContext _db;
+        public LastNameController(ApdatabaseContext db)
+        {
+            _db = db;
+        }
         // GET: api/<LastNameController>
         [HttpGet]
-        public IEnumerable<LastName> Get()
+        public ActionResult<IEnumerable<LastName>> Get()
         {
-            var data = new List<LastName>();
-            using (var db = new AppDbContext.ApdatabaseContext())
+            
+            var data = _db.LastNames.ToList();
+            if (data == null)
             {
-                data = db.LastNames.ToList();
+                return NotFound();
             }
             Console.WriteLine("Retriving Last Name's From DB");
-            return data;
+            return Ok(data);
         }
 
         // GET api/<LastNameController>/5
         [HttpGet("{id}")]
-        public LastName Get(int id)
+        public ActionResult<LastName> Get(int id)
         {
-            var data = new LastName();
-            using (var db = new AppDbContext.ApdatabaseContext())
+            var data = _db.LastNames.Find(id);
+
+            if(data == null)
             {
-                data = db.LastNames.SingleOrDefault(c => c.Id == id); ;
+                return NotFound();
             }
+
             Console.WriteLine("Retriving Last Name From DB");
-            return data;
+
+            return Ok(data);
         }
 
         [HttpGet("{lname}")]

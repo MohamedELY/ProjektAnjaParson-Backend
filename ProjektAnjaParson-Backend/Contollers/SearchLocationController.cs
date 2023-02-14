@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Query;
 using ProjektAnjaParson_Backend.AppDbContext;
 using ProjektAnjaParson_Backend.DataModels;
 
@@ -10,76 +11,128 @@ namespace ProjektAnjaParson_Backend.Contollers
     [ApiController]
     public class SearchLocationController : ControllerBase
     {
+        private readonly ApdatabaseContext _db;
+        private readonly ILogger _logger;
+        public SearchLocationController(ApdatabaseContext db, ILogger<PostController> logger)
+        {
+            _db = db;
+        }
         // GET: api/<SearchLocationController>
         [HttpGet]
         public IEnumerable<SearchLocation> Get()
         {
-            using (var db = new ApdatabaseContext())
-            {
-                // Combines 4 tables to display Country, Location, Place, and Category Names into one list
-                var query = (from c in db.Countries
-                             join l in db.Locations on c.Id equals l.CountryId
-                             join p in db.Places on l.Id equals p.LocationId
-                             join cat in db.Categories on p.CategoryId equals cat.Id
-                             select new SearchLocation
-                             {
-                                 Id = p.Id,
-                                 Country = c.Name,
-                                 Location = l.Name,
-                                 Place = p.Name,
-                                 Category = cat.Name,
-                             }).ToList();
-                return query;
-            }
+
+            // Combines 4 tables to display Country, Location, Place, and Category Names into one list
+            var query =
+                                        (from c in _db.Countries
+                                         join l in _db.Locations on c.Id equals l.CountryId
+                                         join p in _db.Places on l.Id equals p.LocationId
+                                         join cat in _db.Categories on p.CategoryId equals cat.Id
+                                         select new SearchLocation
+                                         {
+                                             Id = p.Id,
+                                             Country = c.Name,
+                                             Location = l.Name,
+                                             Place = p.Name,
+                                             Category = cat.Name,
+                                         }).ToList();
+            return query;
+
         }
 
-        // GET api/<SearchLocationController>/5
+        /*// GET api/<SearchLocationController>/5
         [HttpGet("{id}")]
         public string Get(int id)
         {
             return "value";
-        }
+        }*/
 
         // GET api/<SearchLocationController>/findLocation
         [HttpGet("{searchInput}/findLocation")]
         public IEnumerable<SearchLocation> Get(string? searchInput)
         {
-            using (var db = new ApdatabaseContext())
+            // Combine tables into list
+            var query = (from c in _db.Countries
+                         join l in _db.Locations on c.Id equals l.CountryId
+                         join p in _db.Places on l.Id equals p.LocationId
+                         join cat in _db.Categories on p.CategoryId equals cat.Id
+                         select new SearchLocation
+                         {
+                             Id = p.Id,
+                             Country = c.Name,
+                             Location = l.Name,
+                             Place = p.Name,
+                             Category = cat.Name
+                         }).ToList();
+
+
+            // If searchbar is NOT null or whitespace, show items that contain the searched value
+            if (!string.IsNullOrWhiteSpace(searchInput))
             {
-                // Combine tables into list
-                var query = (from c in db.Countries
-                             join l in db.Locations on c.Id equals l.CountryId
-                             join p in db.Places on l.Id equals p.LocationId
-                             join cat in db.Categories on p.CategoryId equals cat.Id
-                             select new SearchLocation
-                             {
-                                 Id = p.Id,
-                                 Country = c.Name,
-                                 Location = l.Name,
-                                 Place = p.Name,
-                                 Category = cat.Name
-                             }).ToList();
+                // Converts the search string and list values to lowercase
+                // Searches through for items that contain the searched value
 
+                var findLocation = query.Where(c => c.Country.ToLower().Contains(searchInput.ToLower()) ||
+                c.Location.ToLower().Contains(searchInput.ToLower()) ||
+                c.Place.ToLower().Contains(searchInput.ToLower()) ||
+                c.Category.ToLower().Contains(searchInput.ToLower()))
+                .ToList();
 
-                List<SearchLocation> returnList = new List<SearchLocation>();
-
-                // If searchbar is NOT null or whitespace, show items that contain the searched value
-                if (!String.IsNullOrWhiteSpace(searchInput))
-                {
-                    // Converts the search string and list values to lowercase
-                    // Searches through for items that contain the searched value
-
-                    var findLocation = query.Where(c => c.Country.ToLower().Contains(searchInput.ToLower()) ||
-                    c.Location.ToLower().Contains(searchInput.ToLower()) ||
-                    c.Place.ToLower().Contains(searchInput.ToLower()) ||
-                    c.Category.ToLower().Contains(searchInput.ToLower())).ToList();
-
-                    returnList = new List<SearchLocation>(findLocation);
-                    return returnList;
-                }
-                // Else return list with all items
-                else return query;
+                var returnList = new List<SearchLocation>(findLocation);
+                return returnList;
             }
+            // Else return list with all items
+            else
+            {
+                return query;
+            }
+        }
+
+        // GET api/<SearchLocationController>/findLocation
+        // [Route("")]
+        [HttpGet("{rating}")]
+        public List<CSearch> GetRating()
+        {
+            // Combine tables into list
+            var query = (from c in _db.Countries
+                                     join l in _db.Locations on c.Id equals l.CountryId
+                                     join p in _db.Places on l.Id equals p.LocationId
+                                     join cat in _db.Categories on p.CategoryId equals cat.Id
+                                     join po in _db.Posts on p.Id equals po.PlaceId
+                                     select new CSearch
+                                     {
+                                         Id = p.Id,
+                                         Name = p.Name,
+                                         Rating = new List<bool?>() { po.Rating },
+                                     }).ToList();
+
+            foreach(var item in query)
+            {
+                Console.WriteLine(item);
+            }
+
+            // If searchbar is NOT null or whitespace, show items that contain the searched value
+            /*if (!string.IsNullOrWhiteSpace(searchInput))
+            {
+                // Converts the search string and list values to lowercase
+                // Searches through for items that contain the searched value
+
+                var findLocation = query.Where(c => c.Country.ToLower().Contains(searchInput.ToLower()) ||
+                c.Location.ToLower().Contains(searchInput.ToLower()) ||
+                c.Place.ToLower().Contains(searchInput.ToLower()) ||
+                c.Category.ToLower().Contains(searchInput.ToLower()))
+                .ToList();
+
+                var returnList = new List<SearchLocation>(findLocation);
+                return returnList;
+            }
+            // Else return list with all items
+            else
+            {
+                
+            }*/
+
+            return query;
         }
 
         // POST api/<SearchLocationController>
@@ -91,12 +144,6 @@ namespace ProjektAnjaParson_Backend.Contollers
         // PUT api/<SearchLocationController>/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<SearchLocationController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
         {
         }
     }
