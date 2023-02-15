@@ -19,8 +19,16 @@ namespace ProjektAnjaParson_Backend.Controllers
 
         // GET api/<LoginController>/5
         [HttpGet("{username}/{password}")]
-        public CUser Get(string userName, string password)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public ActionResult<CUser> Get(string userName, string password)
         {
+            if(!HelperMethods.CheckIfStringsAreValid(userName, password))
+            {
+                _logger.Log(LogLevel.Error, "Invalid argument(s) {userName} and {password}, check syntax.", userName, password);
+                return BadRequest();
+            }
+
             string hPassword = Security.Hash.Execute(password);
 
             // users = caller.Get();
@@ -38,6 +46,10 @@ namespace ProjektAnjaParson_Backend.Controllers
                              Password = u.Password
                          }).ToList();
 
+            if(users == null)
+            {
+                return NotFound();
+            }
 
             foreach (var user in users)
             {
@@ -49,8 +61,17 @@ namespace ProjektAnjaParson_Backend.Controllers
 
         // GET api/<LoginController>/5
         [HttpGet("{username}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public ActionResult<CUser> GetUserByUsername(string username)
         {
+            if (!HelperMethods.CheckIfStringsAreValid(username))
+            {
+                _logger.Log(LogLevel.Error, "Invalid argument {userName}, check syntax.", username);
+                return BadRequest();
+            }
+
             var data = _db.Users.SingleOrDefault(c => c.Username == username);
 
             if (data == null)

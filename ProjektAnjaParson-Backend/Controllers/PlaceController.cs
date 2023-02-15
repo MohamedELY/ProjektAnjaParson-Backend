@@ -5,6 +5,8 @@ namespace ProjektAnjaParson_Backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(404)]
     public class PlaceController : ControllerBase
     {
         private readonly ApdatabaseContext _db;
@@ -46,6 +48,9 @@ namespace ProjektAnjaParson_Backend.Controllers
 
         // GET api/<PlaceController>/5
         [HttpGet("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public ActionResult<CPlace> Get(int id)
         {
             if (id < 1)
@@ -89,6 +94,8 @@ namespace ProjektAnjaParson_Backend.Controllers
 
         // POST api/<PlaceController>
         [HttpPost]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public ActionResult Post([FromBody] CPlace? place)
         {
 
@@ -117,6 +124,7 @@ namespace ProjektAnjaParson_Backend.Controllers
 
             _logger.Log(LogLevel.Information, "Place {place.Name} added to the DB.", place.Name);
             _db.SaveChanges();
+
             return Ok();
         }
 

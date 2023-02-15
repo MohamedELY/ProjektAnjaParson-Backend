@@ -1,6 +1,8 @@
 ﻿
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
+using ProjektAnjaParson_Backend.Models;
+
 namespace ProjektAnjaParson_Backend.Controllers
 {
     [Route("api/[controller]")]
@@ -17,6 +19,8 @@ namespace ProjektAnjaParson_Backend.Controllers
 
         //GET: api/<FirstNameController>
         [HttpGet]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public ActionResult<IEnumerable<FirstName>> Get()
         {
             var data = _db.FirstNames.ToList();
@@ -32,6 +36,8 @@ namespace ProjektAnjaParson_Backend.Controllers
 
         // GET api/<FirstNameController>/5
         [HttpGet("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public ActionResult<FirstName> Get(int id)
         {
             var data = _db.FirstNames.Find(id);
@@ -48,6 +54,8 @@ namespace ProjektAnjaParson_Backend.Controllers
 
         //GET api/<FirstNameController>/5
         [HttpGet("api/fname")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public ActionResult<FirstName> Get(string fname)
         {
             var data = _db.FirstNames.SingleOrDefault(c => c.FirstName1 == fname);
@@ -64,6 +72,8 @@ namespace ProjektAnjaParson_Backend.Controllers
 
         // POST api/<FirstNameController>
         [HttpPost]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(418)]
         public ActionResult Post(string firstName)
         {
             var exist = _db.FirstNames.SingleOrDefault(c => c.FirstName1.ToLower() == firstName.ToLower());
@@ -75,24 +85,28 @@ namespace ProjektAnjaParson_Backend.Controllers
                 return Ok();
             }
             _logger.Log(LogLevel.Warning, "First name {firstName} already exists in db.", firstName);
-            return StatusCode(StatusCodes.Status418ImATeapot);
+            return Problem("No new entry was added, already exists.");
         }
 
         // DELETE api/<FirstNameController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        public ActionResult Delete(int id)
         {
-            using (var db = new AppDbContext.ApdatabaseContext())
+            
+            var data = _db.FirstNames.SingleOrDefault(c => c.Id == c.Id);
+            if (data == null)
             {
-                var data = db.FirstNames.SingleOrDefault(c => c.Id == c.Id);
-                if (data != null)
-                {
-                    db.FirstNames.Remove(data);
-
-                    db.SaveChanges();
-                }
+                return NotFound();
             }
-            Console.WriteLine("First Name Has been Deleted from DB");
+
+            _db.FirstNames.Remove(data);
+            _logger.Log(LogLevel.Information, "First name with id {id} has been deleted from DB", id);
+            _db.SaveChanges();
+            return Ok();
+
+
         }
     }
 }

@@ -16,6 +16,8 @@ namespace ProjektAnjaParson_Backend.Controllers
         }
         //GET: api/<FullNameController>
         [HttpGet]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public ActionResult<List<CFullName>> Get()
         {
 
@@ -40,9 +42,15 @@ namespace ProjektAnjaParson_Backend.Controllers
 
         // GET api/<FullNameController>/5
         [HttpGet("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public ActionResult<CFullName> Get(int id)
         {
-            
+            if (!HelperMethods.CheckIfIdsAreValid(id))
+            {
+                _logger.Log(LogLevel.Error, "Invalid id {id}, must be a positive integer.", id);
+                return BadRequest();
+            }
             var query = (from flname in _db.FullNames
                                     join fname in _db.FirstNames on flname.FirstNameId equals fname.Id
                                     join lname in _db.LastNames on flname.LastNameId equals lname.Id
@@ -56,31 +64,39 @@ namespace ProjektAnjaParson_Backend.Controllers
 
             if(query == null)
             {
+                _logger.Log(LogLevel.Error, "Could not retrieve full name with id {id} from DB.", id);
                 return NotFound();
             }
 
-            Console.WriteLine("Retriving Full Name From DB");
+            _logger.Log(LogLevel.Information, "Retrieving full name with id {id} from DB.", id);
             return Ok(query);
             
         }
 
         // POST api/<FullNameController>
         [HttpPost]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public ActionResult Post(int lnId, int fnId)
         {
-            
+            if(!HelperMethods.CheckIfIdsAreValid(lnId, fnId))
+            {
+                _logger.Log(LogLevel.Error, "Invalid id(s), must be positive integers - was {lnID} and {fnId}.", lnId, fnId);
+                return BadRequest();
+            }
+
             var exist = _db.FullNames.SingleOrDefault(c => c.FirstNameId == fnId && c.LastNameId == lnId);
             if (exist == null)
             {
-                var data = _db.FullNames;
-                data.Add(new FullName() { FirstNameId = fnId, LastNameId = lnId });
+                _db.FullNames.Add(new FullName() { FirstNameId = fnId, LastNameId = lnId });
 
                 _db.SaveChanges();
-                Console.WriteLine("First Name Has been Saved to DB");
+                _logger.Log(LogLevel.Information, "Full name with first name id {fnId} and last name id {lndId} has been added.", fnId, lnId);
                 return Ok();
             }
+
             _logger.Log(LogLevel.Warning, "Full name with first name id {fnId} and last name id {lnId} already exists.", fnId, lnId);
-            return StatusCode(StatusCodes.Status303SeeOther);
+            return Problem("No new entry was added, already exists.");
         }
 
         // PUT api/<FullNameController>/5

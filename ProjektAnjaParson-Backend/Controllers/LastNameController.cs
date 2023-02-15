@@ -16,6 +16,8 @@ namespace ProjektAnjaParson_Backend.Controllers
         }
         // GET: api/<LastNameController>
         [HttpGet]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public ActionResult<IEnumerable<LastName>> Get()
         {
             var data = _db.LastNames.ToList();
@@ -31,6 +33,9 @@ namespace ProjektAnjaParson_Backend.Controllers
 
         // GET api/<LastNameController>/5
         [HttpGet("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public ActionResult<LastName> Get(int id)
         {
             if(id < 1)
@@ -50,6 +55,9 @@ namespace ProjektAnjaParson_Backend.Controllers
         }
 
         [HttpGet("api/{lastName}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public ActionResult<LastName> Get(string lastName)
         {
             if (string.IsNullOrEmpty(lastName))
@@ -70,6 +78,8 @@ namespace ProjektAnjaParson_Backend.Controllers
 
         // POST api/<LastNameController>
         [HttpPost]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public ActionResult Post([FromBody] string? lastName)
         {
             if (string.IsNullOrEmpty(lastName))
@@ -86,8 +96,9 @@ namespace ProjektAnjaParson_Backend.Controllers
                 _db.SaveChanges();
                 return Ok();
             }
+
             _logger.Log(LogLevel.Warning, "Last name {lastname} already exists in DB.", lastName);
-            return StatusCode(StatusCodes.Status303SeeOther);
+            return Problem("No new entry was added, already exists.");
         }
 
         // PUT api/<LastNameController>/5

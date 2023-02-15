@@ -17,6 +17,8 @@ namespace ProjektAnjaParson_Backend.Controllers
 
         // GET: api/<CountryController>
         [HttpGet]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public ActionResult<IEnumerable<Country>> Get()
         {
             var data = _db.Countries.ToList();
@@ -32,6 +34,9 @@ namespace ProjektAnjaParson_Backend.Controllers
 
         // GET api/<CountryController>/5
         [HttpGet("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public ActionResult<Country> Get(int id)
         {
             if (id < 1)
@@ -53,6 +58,9 @@ namespace ProjektAnjaParson_Backend.Controllers
         }
 
         [HttpGet("api/cName")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public ActionResult<Country> Get(string cName)
         {
             if(cName == null)
@@ -73,6 +81,9 @@ namespace ProjektAnjaParson_Backend.Controllers
 
         // POST api/<CountryController>
         [HttpPost]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public ActionResult Post([FromBody] string? name)
         {
             if (!HelperMethods.CheckIfStringsAreValid(name))
@@ -86,7 +97,7 @@ namespace ProjektAnjaParson_Backend.Controllers
             if (exist != null)
             {
                 _logger.Log(LogLevel.Error, "Country {name} already exists in database.", name);
-                return NotFound();
+                return Problem("No new entry was added, already exists.");
             }
             
             _db.Countries.Add(new Country() { Name = name });

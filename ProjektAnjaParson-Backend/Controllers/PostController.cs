@@ -16,6 +16,8 @@ namespace ProjektAnjaParson_Backend.Controllers
         }
         // GET: api/PostController
         [HttpGet]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public ActionResult<IEnumerable<CPost>> Get()
         {
             
@@ -44,6 +46,9 @@ namespace ProjektAnjaParson_Backend.Controllers
 
         // GET api/PostController/5
         [HttpGet("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public ActionResult<IEnumerable<CPost>> Get(int id)
         {
             if (id < 1)
@@ -83,6 +88,8 @@ namespace ProjektAnjaParson_Backend.Controllers
 
         // POST api/PostController
         [HttpPost]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public ActionResult Post([FromBody] CNewPost post)
         {
             if (post != null)
@@ -107,6 +114,8 @@ namespace ProjektAnjaParson_Backend.Controllers
 
         // PUT api/PostController/5
         [HttpPut("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public ActionResult Put(int id, int? placeId, string? title, string? description, int? userId, bool? rating)
         {
 
@@ -130,6 +139,8 @@ namespace ProjektAnjaParson_Backend.Controllers
 
         // DELETE api/PostController/5
         [HttpDelete("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public ActionResult Delete(int id)
         {
             var data = _db.Posts.Find(id);

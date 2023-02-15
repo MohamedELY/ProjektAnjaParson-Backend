@@ -16,6 +16,8 @@ namespace ProjektAnjaParson_Backend.Controllers
         }
         // GET: api/<UserController>
         [HttpGet]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public ActionResult<IEnumerable<CUser>> Get()
         {
             
@@ -44,6 +46,9 @@ namespace ProjektAnjaParson_Backend.Controllers
 
         // GET api/<UserController>/5
         [HttpGet("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public ActionResult<CUser> Get(int id)
         {
             if(id < 1)
@@ -85,6 +90,9 @@ namespace ProjektAnjaParson_Backend.Controllers
 
         // POST api/<UserController>
         [HttpPost]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public ActionResult Post([FromBody] CUser? user)
         {
             if (user == null)

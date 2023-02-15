@@ -16,6 +16,8 @@ namespace ProjektAnjaParson_Backend.Controllers
         }
         // GET: api/<SearchLocationController>
         [HttpGet]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public ActionResult<IEnumerable<SearchLocation>> Get()
         {
 
@@ -52,6 +54,8 @@ namespace ProjektAnjaParson_Backend.Controllers
 
         // GET api/<SearchLocationController>/findLocation
         [HttpGet("{searchInput}/findLocation")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public ActionResult<IEnumerable<SearchLocation>> Get(string? searchInput)
         {
             // Combine tables into list
@@ -98,6 +102,8 @@ namespace ProjektAnjaParson_Backend.Controllers
         // GET api/<SearchLocationController>/findLocation
         // [Route("")]
         [HttpGet("rating")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public ActionResult<IEnumerable<CSearch>> GetRating()
         {
             // Combine tables into list

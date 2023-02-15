@@ -16,6 +16,8 @@ namespace ProjektAnjaParson_Backend.Controllers
         }
         // GET: api/<LocationController>
         [HttpGet]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public ActionResult<IEnumerable<Location>> Get()
         {
             
@@ -31,6 +33,9 @@ namespace ProjektAnjaParson_Backend.Controllers
 
         // GET api/<LocationController>/5
         [HttpGet("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public ActionResult<Location?> Get(int id)
         {
             if(id < 1)
@@ -52,8 +57,15 @@ namespace ProjektAnjaParson_Backend.Controllers
 
         // POST api/<LocationController>
         [HttpPost]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public ActionResult Post(string name)
         {
+            if (!HelperMethods.CheckIfStringsAreValid(name))
+            {
+                _logger.Log(LogLevel.Error, "Invalid argument {name}, check syntax.", name);
+                return BadRequest();
+            }
             var exist = _db.Locations.SingleOrDefault(c => c.Name.ToLower() == name.ToLower());
             if (exist == null)
             {
@@ -64,12 +76,14 @@ namespace ProjektAnjaParson_Backend.Controllers
             }
 
             _logger.Log(LogLevel.Error, "Location {name} already exists in DB.", name);
-            return StatusCode(StatusCodes.Status303SeeOther);
+            return StatusCode(StatusCodes.Status418ImATeapot);
         }
 
         // PUT api/<LocationController>/5
         [HttpPut("{id}")]
-        public void Put(int id, string? name, int? countryId)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        public ActionResult Put(int id, string? name, int? countryId)
         {
             var selected = _db.Locations.SingleOrDefault(c => c.Id == id);
             if (selected != null)
@@ -77,8 +91,10 @@ namespace ProjektAnjaParson_Backend.Controllers
                 selected.Name= name ??= selected.Name;
                 selected.CountryId = countryId ??= selected.CountryId;
                 _db.SaveChanges();
+                return Ok();
             }
-            
+
+            return NotFound();
         }
 
         // DELETE api/<LocationController>/5

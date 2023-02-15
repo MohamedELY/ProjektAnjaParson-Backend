@@ -17,6 +17,8 @@ namespace ProjektAnjaParson_Backend.Controllers
         }
         // GET: api/<CategoryController>
         [HttpGet]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public ActionResult<IEnumerable<Category>> Get()
         {
             
@@ -35,6 +37,9 @@ namespace ProjektAnjaParson_Backend.Controllers
 
         //GET api/<CategoryController>/5
         [HttpGet("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public ActionResult<Category> Get(int id)
         {
             if (HelperMethods.CheckIfIdsAreValid(id) == false) 
@@ -55,6 +60,8 @@ namespace ProjektAnjaParson_Backend.Controllers
         }
         [Route("api/categoryname")]
         [HttpGet]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public ActionResult<Category> Get(string cName)
         {
             var data = _db.Categories.SingleOrDefault(c => c.Name == cName);
@@ -71,6 +78,8 @@ namespace ProjektAnjaParson_Backend.Controllers
 
         // POST api/<CategoryController>
         [HttpPost]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public ActionResult Post(string name, string? icon)
         {
             if(!HelperMethods.CheckIfStringsAreValid(name, icon))
