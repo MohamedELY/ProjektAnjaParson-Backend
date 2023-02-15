@@ -51,7 +51,7 @@ namespace ProjektAnjaParson_Backend.Controllers
                 _logger.Log(LogLevel.Error, "Invalid post ID '{id}', must be a positive integer.", id);
                 return BadRequest();
             }
-            var exists = _db.Posts.Find(id);
+            var exists = _db.Places.Find(id);
             if(exists == null)
             {
                 _logger.Log(LogLevel.Error, "Could not find post with id {id}.", id);
