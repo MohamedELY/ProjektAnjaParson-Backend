@@ -1,6 +1,4 @@
-﻿using ProjektAnjaParson_Backend.Models;
-using ProjektAnjaParson_Backend.Controllers;
-
+﻿
 namespace ProjektAnjaParson_Backend.DataModels
 {
     public class CFullName
@@ -17,7 +15,7 @@ namespace ProjektAnjaParson_Backend.DataModels
         /// <returns>int</returns>
         public static int CreateFullName(string firstName, string lastName)
         {
-            using var db = new AppDbContext.ApdatabaseContext();
+            using var db = new ApdatabaseContext();
             // Add first and lastname to database
 
             /*var firstNameController = new FirstNameController();

@@ -1,4 +1,5 @@
-﻿namespace ProjektAnjaParson_Backend.DataModels
+﻿
+namespace ProjektAnjaParson_Backend.DataModels
 {
     public class SearchLocation
     {

@@ -51,6 +51,7 @@ namespace ProjektAnjaParson_Backend.Controllers
                 _logger.Log(LogLevel.Error, "Invalid user ID {id}, must be a positive integer.", id);
                 return BadRequest();
             }
+
             var exists = _db.Users.Find(id);
             if(exists == null)
             {
@@ -71,6 +72,7 @@ namespace ProjektAnjaParson_Backend.Controllers
                                     Username = u.Username,
                                     Password = u.Password
                                 }).First();
+
             if(query == null)
             {
                 _logger.Log(LogLevel.Error, "Could not retrieve user with id {id}.", id);

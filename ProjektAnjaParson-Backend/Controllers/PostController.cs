@@ -51,7 +51,12 @@ namespace ProjektAnjaParson_Backend.Controllers
                 _logger.Log(LogLevel.Error, "Invalid post ID '{id}', must be a positive integer.", id);
                 return BadRequest();
             }
-
+            var exists = _db.Posts.Find(id);
+            if(exists == null)
+            {
+                _logger.Log(LogLevel.Error, "Could not find post with id {id}.", id);
+                return NotFound();
+            }
             var query = (from p in _db.Posts
                                     join u in _db.Users on p.UserId equals u.Id
                                     where id == p.PlaceId
@@ -118,6 +123,7 @@ namespace ProjektAnjaParson_Backend.Controllers
                 _logger.Log(LogLevel.Information, "Post has been updated.");
                 return Ok();
             }
+
             _logger.Log(LogLevel.Error, "Could not find post to update.");
             return NotFound();
         }
