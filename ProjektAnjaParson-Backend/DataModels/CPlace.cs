@@ -1,4 +1,4 @@
-﻿using ProjektAnjaParson_Backend.Contollers;
+﻿using ProjektAnjaParson_Backend.Controllers;
 using ProjektAnjaParson_Backend.Models;
 
 namespace ProjektAnjaParson_Backend.DataModels
@@ -19,7 +19,13 @@ namespace ProjektAnjaParson_Backend.DataModels
 
         public string? Pic { get; set; }
 
-        public static int CreataLocation(string locationName, string countryName)
+        /// <summary>
+        /// Creates a location and returns the location ID.
+        /// </summary>
+        /// <param name="locationName"></param>
+        /// <param name="countryName"></param>
+        /// <returns>int</returns>
+        public static int CreateLocation(string locationName, string countryName)
         {
             using (var db = new AppDbContext.ApdatabaseContext())
             {

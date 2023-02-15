@@ -1,12 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using ProjektAnjaParson_Backend.AppDbContext;
-using ProjektAnjaParson_Backend.Models;
+﻿using Microsoft.IdentityModel.Tokens;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-
-namespace ProjektAnjaParson_Backend.Contollers
+namespace ProjektAnjaParson_Backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -28,6 +24,7 @@ namespace ProjektAnjaParson_Backend.Contollers
 
             if(data == null) 
             {
+                _logger.Log(LogLevel.Error, "Could not retrieve categories from DB.");
                 return NotFound();
             }
 
@@ -40,6 +37,11 @@ namespace ProjektAnjaParson_Backend.Contollers
         [HttpGet("{id}")]
         public ActionResult<Category> Get(int id)
         {
+            if (HelperMethods.CheckIfIdsAreValid(id) == false) 
+            { 
+                return BadRequest(); 
+            }
+
             var data = _db.Categories.Find(id);
 
             if(data == null)
@@ -71,45 +73,36 @@ namespace ProjektAnjaParson_Backend.Contollers
         [HttpPost]
         public ActionResult Post(string name, string? icon)
         {
-            if (name.IsNullOrEmpty())
+            if(!HelperMethods.CheckIfStringsAreValid(name, icon))
             {
-                _logger.Log(LogLevel.Error, "Parameter Name cannot be empty or null");
+                _logger.Log(LogLevel.Error, "Parameter string cannot be empty or null");
                 return BadRequest();
             }
 
-            if (icon.IsNullOrEmpty())
-            {
-                _logger.Log(LogLevel.Error, "Parameter Icon cannot be empty or null");
-                return BadRequest();
-            }
             var newCategory = new Category();
 
             var existName = _db.Categories.SingleOrDefault(c => c.Name == name);
-            if (existName == null)
+            if (existName != null)
             {
-                _logger.Log(LogLevel.Information, "Name {name} added to database.", name);
-                newCategory.Name = name;
-            }
-            else 
-            {
-                _logger.Log(LogLevel.Information, "Name {name} already exists in database.", name);
-                newCategory.Name = existName.Name; 
+                _logger.Log(LogLevel.Warning, "Name {name} already exists in database.", name);
+                newCategory.Name = existName.Name;
             }
 
+            _logger.Log(LogLevel.Information, "Name {name} added to database.", name);
+            newCategory.Name = name;
+
             var existIcon = _db.Categories.SingleOrDefault(c => c.Icon == icon);
-            if (existIcon == null)
+            if (existIcon != null)
             {
-                _logger.Log(LogLevel.Information, "Icon URL {icon} added to database.", icon);
-                newCategory.Icon = icon;
-            }
-            else
-            {
-                _logger.Log(LogLevel.Information, "Icon URL {icon} already exists in database.", icon);
+                _logger.Log(LogLevel.Warning, "Icon URL {icon} already exists in database.", icon);
                 newCategory.Icon = existIcon.Icon;
             }
 
+            _logger.Log(LogLevel.Information, "Icon URL {icon} added to database.", icon);
+            newCategory.Icon = icon;
+            
             _db.Categories.Add(newCategory);
-
+            _logger.Log(LogLevel.Information, "Category '{name}' added to the database.", name);
             _db.SaveChanges();
 
             return Ok();
@@ -117,10 +110,16 @@ namespace ProjektAnjaParson_Backend.Contollers
 
         // PUT api/<CategoryController>/5
         [HttpPut("{id}")]
-        public ActionResult Put(int id, string name, string icon)
+        public ActionResult Put(int id, string? name, string? icon)
         {
-            var selected = _db.Categories.Find(id);
-            var origName = selected.Name;
+            Category? selected = _db.Categories.Find(id);
+            if(selected == null)
+            {
+                _logger.Log(LogLevel.Error, "Could not find category with id {id}", id);
+                return NotFound();
+            }
+
+            string? origName = selected.Name;
             if (selected != null)
             {
                 selected.Name = name;
@@ -133,6 +132,7 @@ namespace ProjektAnjaParson_Backend.Contollers
             }
 
             _logger.Log(LogLevel.Error, "Could not find category {name}", name);
+
             return NotFound(name);
         }
 

@@ -1,11 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using ProjektAnjaParson_Backend.AppDbContext;
-using ProjektAnjaParson_Backend.Models;
-
+﻿
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace ProjektAnjaParson_Backend.Contollers
+namespace ProjektAnjaParson_Backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -38,16 +34,17 @@ namespace ProjektAnjaParson_Backend.Contollers
         [HttpGet("{id}")]
         public ActionResult<Country> Get(int id)
         {
-            if(id < 1)
+            if (id < 1)
             {
+                _logger.Log(LogLevel.Error, "Invalid ID, must be a positive integer, was {id}.", id);
                 return BadRequest();
             }
 
-            var data = _db.Countries.Find();
+            Country? data = _db.Countries.Find(id);
 
             if (data == null)
             {
-                _logger.Log(LogLevel.Error, "Could not get country {data.Name} from database.", data.Name);
+                _logger.Log(LogLevel.Error, "Could not get country with id {id} from database.", id);
                 return NotFound();
             }
 
@@ -55,8 +52,7 @@ namespace ProjektAnjaParson_Backend.Contollers
             return Ok(data);
         }
 
-
-        [HttpGet("{countryName}")]
+        [HttpGet("api/cName")]
         public ActionResult<Country> Get(string cName)
         {
             if(cName == null)
@@ -77,25 +73,25 @@ namespace ProjektAnjaParson_Backend.Contollers
 
         // POST api/<CountryController>
         [HttpPost]
-        public ActionResult Post([FromBody] string name)
+        public ActionResult Post([FromBody] string? name)
         {
-            if (string.IsNullOrEmpty(name))
+            if (!HelperMethods.CheckIfStringsAreValid(name))
             {
-
+                _logger.Log(LogLevel.Error, "Invalid argument '{name}'.", name);
                 return BadRequest();
             }
-            var exist = _db.Countries.SingleOrDefault(c => c.Name.ToLower() == name.ToLower());
-            if (exist == null)
-            {
-                var data = _db.Countries;
-                data.Add(new Country() { Name = name });
-                _db.SaveChanges();
-            }
-            else
-            {
-                return Problem($"Country {name} already exists in database.");
-            }
 
+            var exist = _db.Countries.SingleOrDefault(c => c.Name.ToLower() == name.ToLower());
+            
+            if (exist != null)
+            {
+                _logger.Log(LogLevel.Error, "Country {name} already exists in database.", name);
+                return NotFound();
+            }
+            
+            _db.Countries.Add(new Country() { Name = name });
+            _logger.Log(LogLevel.Error, "Country {name} added to database.", name);
+            _db.SaveChanges();
             return Ok();
         }
 

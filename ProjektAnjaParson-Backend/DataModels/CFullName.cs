@@ -1,18 +1,16 @@
 ﻿using ProjektAnjaParson_Backend.Models;
-using ProjektAnjaParson_Backend.Contollers;
+using ProjektAnjaParson_Backend.Controllers;
 
 namespace ProjektAnjaParson_Backend.DataModels
 {
     public class CFullName
     {
         public int Id { get; set; }
-
+        public string? FirstName { get; set; }
         public string? LastName { get; set; }
 
-        public string? FirstName { get; set; }
-
         /// <summary>
-        /// Creates a full name and returns its ID.
+        /// Creates a full name and returns the full name ID.
         /// </summary>
         /// <param name="firstName"></param>
         /// <param name="lastName"></param>

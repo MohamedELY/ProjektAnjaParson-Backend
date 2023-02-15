@@ -1,10 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using ProjektAnjaParson_Backend.AppDbContext;
-using ProjektAnjaParson_Backend.DataModels;
-
+﻿
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace ProjektAnjaParson_Backend.Contollers
+namespace ProjektAnjaParson_Backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -22,7 +19,7 @@ namespace ProjektAnjaParson_Backend.Contollers
 
         // GET api/<LoginController>/5
         [HttpGet("{username}/{password}")]
-        public CUser Get(string username, string password)
+        public CUser Get(string userName, string password)
         {
             string hPassword = Security.Hash.Execute(password);
 
@@ -44,7 +41,7 @@ namespace ProjektAnjaParson_Backend.Contollers
 
             foreach (var user in users)
             {
-                if(user.Username == username && user.Password == hPassword )
+                if(user.Username == userName && user.Password == hPassword )
                     return user;
             }
             return new CUser();
@@ -58,9 +55,10 @@ namespace ProjektAnjaParson_Backend.Contollers
 
             if (data == null)
             {
-                return NotFound(data);
+                _logger.Log(LogLevel.Error, "Could not find user with username {userName} in DB.", username);
+                return NotFound();
             }
-
+            _logger.Log(LogLevel.Information, "User with username {userName} retrieved from DB.", username);
             return Ok(data);
         }
     }

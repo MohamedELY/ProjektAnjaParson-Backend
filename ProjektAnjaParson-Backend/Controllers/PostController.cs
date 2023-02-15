@@ -1,11 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using ProjektAnjaParson_Backend.AppDbContext;
-using ProjektAnjaParson_Backend.DataModels;
-using ProjektAnjaParson_Backend.Models;
-
+﻿
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace ProjektAnjaParson_Backend.Contollers
+namespace ProjektAnjaParson_Backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -16,10 +12,11 @@ namespace ProjektAnjaParson_Backend.Contollers
         public PostController(ApdatabaseContext db, ILogger<PostController> logger)
         {
             _db = db;
+            _logger = logger;
         }
         // GET: api/PostController
         [HttpGet]
-        public IEnumerable<CPost> Get()
+        public ActionResult<IEnumerable<CPost>> Get()
         {
             
             var query = (from p in _db.Posts
@@ -34,38 +31,50 @@ namespace ProjektAnjaParson_Backend.Contollers
                                 Username = u.Username,
                                 Rating = p.Rating
                             }).ToList();
-            
-            
-            Console.WriteLine("Retriving Post's From DB");
-            return query;
+
+            if(query == null)
+            {
+                _logger.Log(LogLevel.Error, "Could not retrieve last names from DB.");
+                return NotFound();
+            }
+
+            _logger.Log(LogLevel.Information, "Retriving posts from DB.");
+            return Ok(query);
         }
 
         // GET api/PostController/5
         [HttpGet("{id}")]
-        public IEnumerable<CPost> Get(int id)
+        public ActionResult<IEnumerable<CPost>> Get(int id)
         {
-            
+            if (id < 1)
+            {
+                _logger.Log(LogLevel.Error, "Invalid post ID '{id}', must be a positive integer.", id);
+                return BadRequest();
+            }
+
             var query = (from p in _db.Posts
-                            join u in _db.Users on p.UserId equals u.Id
-                            where id == p.PlaceId
-                            select new CPost
-                            {
-                                Id = p.Id,
-                                PlaceId = p.PlaceId,
-                                Title = p.Title,
-                                Description = p.Description,
-                                UserId = p.UserId,
-                                Username = u.Username,
-                                Rating = p.Rating
-                            }).ToList();
+                                    join u in _db.Users on p.UserId equals u.Id
+                                    where id == p.PlaceId
+                                    select new CPost
+                                    {
+                                        Id = p.Id,
+                                        PlaceId = p.PlaceId,
+                                        Title = p.Title,
+                                        Description = p.Description,
+                                        UserId = p.UserId,
+                                        Username = u.Username,
+                                        Rating = p.Rating
+                                    }).ToList();
 
-            Console.WriteLine("Retriving Post From DB");
-            return query;
-            
-            
+            if(query == null)
+            {
+                _logger.Log(LogLevel.Error, "Could not find post with id {id}", id);
+                return NotFound();
+            }
+
+            _logger.Log(LogLevel.Information, "Retriving posts from DB.");
+            return Ok(query);
         }
-
-
 
         // POST api/PostController
         [HttpPost]
@@ -82,16 +91,13 @@ namespace ProjektAnjaParson_Backend.Contollers
                     UserId = post.UserId,
                     Rating = post.Rating
                 });
-            }
-            else
-            {
-                _logger.Log(LogLevel.Error, "Could not save post, must enter something.");
-                return BadRequest();
-            }
 
-            _logger.Log(LogLevel.Information, "Post has been saved to DB.");
-            _db.SaveChanges();
-            return Ok();
+                _logger.Log(LogLevel.Information, "Post has been saved to DB.");
+                return Ok();
+            }
+            
+            _logger.Log(LogLevel.Error, "Could not save post, must enter something.");
+            return BadRequest();
         }
 
         // PUT api/PostController/5
@@ -100,6 +106,7 @@ namespace ProjektAnjaParson_Backend.Contollers
         {
 
             var selected = _db.Posts.Find(id);
+
             if (selected != null)
             {
                 selected.PlaceId = placeId ??= selected.PlaceId;
@@ -108,10 +115,10 @@ namespace ProjektAnjaParson_Backend.Contollers
                 selected.UserId = userId ??= selected.UserId;
                 selected.Rating = rating ??= selected.Rating;
                 _db.SaveChanges();
-
+                _logger.Log(LogLevel.Information, "Post has been updated.");
                 return Ok();
             }
-
+            _logger.Log(LogLevel.Error, "Could not find post to update.");
             return NotFound();
         }
 
@@ -129,7 +136,7 @@ namespace ProjektAnjaParson_Backend.Contollers
                 return Ok(data);
             }
 
-            return BadRequest();
+            return NotFound();
         }
     }
 }

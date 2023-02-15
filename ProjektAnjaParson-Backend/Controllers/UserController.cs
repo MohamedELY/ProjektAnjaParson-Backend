@@ -1,11 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using ProjektAnjaParson_Backend.Models;
-using ProjektAnjaParson_Backend.DataModels;
-using ProjektAnjaParson_Backend.AppDbContext;
-
+﻿
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace ProjektAnjaParson_Backend.Contollers
+namespace ProjektAnjaParson_Backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -20,30 +16,48 @@ namespace ProjektAnjaParson_Backend.Contollers
         }
         // GET: api/<UserController>
         [HttpGet]
-        public List<CUser> Get()
+        public ActionResult<IEnumerable<CUser>> Get()
         {
-            using (var db = new AppDbContext.ApdatabaseContext())
+            
+            var query = (from u in _db.Users
+                            join flname in _db.FullNames on u.FullNameId equals flname.Id
+                            join fname in _db.FirstNames on flname.FirstNameId equals fname.Id
+                            join lname in _db.LastNames on flname.LastNameId equals lname.Id
+                            select new CUser
+                            {
+                                Id = u.Id,
+                                Firstname = fname.FirstName1,
+                                Lastname = lname.LastName1,
+                                Username = u.Username,
+                                Password = u.Password
+                            }).ToList();
+
+            if(query == null)
             {
-                var query = (from u in db.Users
-                             join flname in db.FullNames on u.FullNameId equals flname.Id
-                             join fname in db.FirstNames on flname.FirstNameId equals fname.Id
-                             join lname in db.LastNames on flname.LastNameId equals lname.Id
-                             select new CUser
-                             {
-                                 Id = u.Id,
-                                 Firstname = fname.FirstName1,
-                                 Lastname = lname.LastName1,
-                                 Username = u.Username,
-                                 Password = u.Password
-                             }).ToList();
-                return query;
+                _logger.Log(LogLevel.Error, "Could not retrieve users from DB.");
+                return NotFound();
             }
+
+            _logger.Log(LogLevel.Information, "Users are being retrieved from DB.");
+            return Ok(query);
         }
 
         // GET api/<UserController>/5
         [HttpGet("{id}")]
-        public CUser Get(int id)
+        public ActionResult<CUser> Get(int id)
         {
+            if(id < 1)
+            {
+                _logger.Log(LogLevel.Error, "Invalid user ID {id}, must be a positive integer.", id);
+                return BadRequest();
+            }
+            var exists = _db.Users.Find(id);
+            if(exists == null)
+            {
+                _logger.Log(LogLevel.Error, "User with id {id} does not exist in the database.", id);
+                return NotFound();
+            }
+
             var query = (from u in _db.Users
                                 join flname in _db.FullNames on u.FullNameId equals flname.Id
                                 join fname in _db.FirstNames on flname.FirstNameId equals fname.Id
@@ -57,13 +71,26 @@ namespace ProjektAnjaParson_Backend.Contollers
                                     Username = u.Username,
                                     Password = u.Password
                                 }).First();
-            return query;
+            if(query == null)
+            {
+                _logger.Log(LogLevel.Error, "Could not retrieve user with id {id}.", id);
+                return NotFound();
+            }
+
+            _logger.Log(LogLevel.Information, "User with id {id} is being retrieved from DB.", id);
+            return Ok(query);
         }
 
         // POST api/<UserController>
         [HttpPost]
-        public ActionResult Post([FromBody] CUser user)
+        public ActionResult Post([FromBody] CUser? user)
         {
+            if (user == null)
+            {
+                _logger.Log(LogLevel.Error, $"Invalid argument, must be a {typeof(CUser)}.");
+                return NotFound();
+            }
+
             var checkExists = _db.Users.SingleOrDefault(u => u.Username == user.Username);
 
             if (checkExists != null)
@@ -73,7 +100,13 @@ namespace ProjektAnjaParson_Backend.Contollers
             }
 
             var fullNameID = CFullName.CreateFullName(user.Firstname, user.Lastname);
-            
+
+            if (fullNameID < 1)
+            {
+                _logger.Log(LogLevel.Error, "Invalid full name ID '{id}', must be a positive integer.", fullNameID);
+                return BadRequest();
+            }
+
             _db.Users.Add(new User()
             {
                 FullNameId = fullNameID,

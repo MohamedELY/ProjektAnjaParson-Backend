@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
+﻿
 namespace ProjektAnjaParson_Backend.Models;
 
 public partial class LastName

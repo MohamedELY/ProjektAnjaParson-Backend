@@ -1,11 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Query;
-using ProjektAnjaParson_Backend.AppDbContext;
-using ProjektAnjaParson_Backend.DataModels;
-
+﻿
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace ProjektAnjaParson_Backend.Contollers
+namespace ProjektAnjaParson_Backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -13,13 +9,14 @@ namespace ProjektAnjaParson_Backend.Contollers
     {
         private readonly ApdatabaseContext _db;
         private readonly ILogger _logger;
-        public SearchLocationController(ApdatabaseContext db, ILogger<PostController> logger)
+        public SearchLocationController(ApdatabaseContext db, ILogger<SearchLocationController> logger)
         {
             _db = db;
+            _logger = logger;
         }
         // GET: api/<SearchLocationController>
         [HttpGet]
-        public IEnumerable<SearchLocation> Get()
+        public ActionResult<IEnumerable<SearchLocation>> Get()
         {
 
             // Combines 4 tables to display Country, Location, Place, and Category Names into one list
@@ -36,8 +33,14 @@ namespace ProjektAnjaParson_Backend.Contollers
                                              Place = p.Name,
                                              Category = cat.Name,
                                          }).ToList();
-            return query;
 
+            if(query == null)
+            {
+                _logger.Log(LogLevel.Error, "Could not retrieve locations in DB.");
+                return NotFound();
+            }
+
+            return Ok(query);
         }
 
         /*// GET api/<SearchLocationController>/5
@@ -49,22 +52,27 @@ namespace ProjektAnjaParson_Backend.Contollers
 
         // GET api/<SearchLocationController>/findLocation
         [HttpGet("{searchInput}/findLocation")]
-        public IEnumerable<SearchLocation> Get(string? searchInput)
+        public ActionResult<IEnumerable<SearchLocation>> Get(string? searchInput)
         {
             // Combine tables into list
             var query = (from c in _db.Countries
-                         join l in _db.Locations on c.Id equals l.CountryId
-                         join p in _db.Places on l.Id equals p.LocationId
-                         join cat in _db.Categories on p.CategoryId equals cat.Id
-                         select new SearchLocation
-                         {
-                             Id = p.Id,
-                             Country = c.Name,
-                             Location = l.Name,
-                             Place = p.Name,
-                             Category = cat.Name
-                         }).ToList();
+                                         join l in _db.Locations on c.Id equals l.CountryId
+                                         join p in _db.Places on l.Id equals p.LocationId
+                                         join cat in _db.Categories on p.CategoryId equals cat.Id
+                                         select new SearchLocation
+                                         {
+                                             Id = p.Id,
+                                             Country = c.Name,
+                                             Location = l.Name,
+                                             Place = p.Name,
+                                             Category = cat.Name
+                                         }).ToList();
 
+            if(query == null)
+            {
+                _logger.Log(LogLevel.Error, "Could not retrieve locations searched for in DB.");
+                return NotFound();
+            }
 
             // If searchbar is NOT null or whitespace, show items that contain the searched value
             if (!string.IsNullOrWhiteSpace(searchInput))
@@ -82,16 +90,15 @@ namespace ProjektAnjaParson_Backend.Contollers
                 return returnList;
             }
             // Else return list with all items
-            else
-            {
-                return query;
-            }
+            
+            return query;
+            
         }
 
         // GET api/<SearchLocationController>/findLocation
         // [Route("")]
         [HttpGet("rating")]
-        public List<CSearch> GetRating()
+        public ActionResult<IEnumerable<CSearch>> GetRating()
         {
             // Combine tables into list
             var query = (from c in _db.Countries
@@ -107,8 +114,14 @@ namespace ProjektAnjaParson_Backend.Contollers
 
                                      }).ToList();
 
-            var dislike = query.Where(x => x.Id.Equals(1)).Where(x => x.Rating.Equals(false)).Count();
-            var like = query.Where(x => x.Id.Equals(1)).Where(x => x.Rating.Equals(true)).Count();
+            if (query == null)
+            {
+                _logger.Log(LogLevel.Error, "Could not retrieve ratings from DB.");
+                return NotFound();
+            }
+
+            /*var dislike = query.Where(x => x.Id.Equals(1)).Where(x => x.Rating.Equals(false)).Count();
+            var like = query.Where(x => x.Id.Equals(1)).Where(x => x.Rating.Equals(true)).Count();*/
 
             foreach(var item in query)
             {
@@ -119,7 +132,7 @@ namespace ProjektAnjaParson_Backend.Contollers
             var newList = query.Distinct().ToList();
 
 
-            Console.WriteLine(dislike);
+            // Console.WriteLine(dislike);
 
 
             // If searchbar is NOT null or whitespace, show items that contain the searched value
@@ -143,7 +156,7 @@ namespace ProjektAnjaParson_Backend.Contollers
                 
             }*/
 
-            return newList;
+            return Ok(newList);
         }
 
         // POST api/<SearchLocationController>

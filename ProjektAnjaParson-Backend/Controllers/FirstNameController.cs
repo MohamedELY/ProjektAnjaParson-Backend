@@ -1,19 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using ProjektAnjaParson_Backend.AppDbContext;
-using ProjektAnjaParson_Backend.Models;
-
+﻿
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace ProjektAnjaParson_Backend.Contollers
+namespace ProjektAnjaParson_Backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class FirstNameController : ControllerBase
     {
         private readonly ApdatabaseContext _db;
-        public FirstNameController(ApdatabaseContext db)
+        private readonly ILogger<FirstNameController> _logger;
+        public FirstNameController(ApdatabaseContext db, ILogger<FirstNameController> logger)
         {
             _db = db;
+            _logger = logger;
         }
 
         //GET: api/<FirstNameController>
@@ -23,9 +22,11 @@ namespace ProjektAnjaParson_Backend.Contollers
             var data = _db.FirstNames.ToList();
             if (data == null)
             {
+                _logger.Log(LogLevel.Error, "Could not retrieve first names from DB.");
                 return NotFound();
             }
-            Console.WriteLine("Retriving First Name's From DB");
+
+            _logger.Log(LogLevel.Information, "Retrieving first names from DB");
             return Ok(data);
         }
 
@@ -33,32 +34,32 @@ namespace ProjektAnjaParson_Backend.Contollers
         [HttpGet("{id}")]
         public ActionResult<FirstName> Get(int id)
         {
-            var data = _db.FirstNames.SingleOrDefault(c => c.Id == id);
+            var data = _db.FirstNames.Find(id);
 
             if (data == null)
             {
+                _logger.Log(LogLevel.Error, "Could not retrieve first name with ID {id} from DB.", id);
                 return NotFound();
             }
 
-            Console.WriteLine("Retriving First Name From DB");
-
-            return data;
+            _logger.Log(LogLevel.Information, "Retrieving first name with ID {id} From DB", id);
+            return Ok(data);
         }
 
         //GET api/<FirstNameController>/5
-        [HttpGet("{fname}")]
+        [HttpGet("api/fname")]
         public ActionResult<FirstName> Get(string fname)
         {
             var data = _db.FirstNames.SingleOrDefault(c => c.FirstName1 == fname);
 
             if (data == null)
             {
+                _logger.Log(LogLevel.Error, "Could not retrieve first name {fname} from DB.", fname);
                 return NotFound();
             }
 
-            Console.WriteLine("Retriving First Name From DB");
+            _logger.Log(LogLevel.Information, "Retrieving first name with ID {fname} From DB", fname);
             return Ok(data);
-
         }
 
         // POST api/<FirstNameController>
@@ -69,16 +70,12 @@ namespace ProjektAnjaParson_Backend.Contollers
             if (exist == null)
             {
                 _db.FirstNames.Add(new FirstName() { FirstName1 = firstName });
-
                 _db.SaveChanges();
-                Console.WriteLine("First Name Has been Saved to DB");
+                _logger.Log(LogLevel.Information, "First name {firstName} has been saved to DB.", firstName);
                 return Ok();
             }
-            else
-            {
-                return Problem("First name {firstName} already exists in db.", firstName);
-            }
-            
+            _logger.Log(LogLevel.Warning, "First name {firstName} already exists in db.", firstName);
+            return StatusCode(StatusCodes.Status418ImATeapot);
         }
 
         // DELETE api/<FirstNameController>/5
